@@ -1,10 +1,11 @@
-import { useEffect, useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { FirebaseContext } from "@framework/FirebaseContext";
 import { ref, update } from "firebase/database";
-import { ref as sRef, getDownloadURL, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref as sRef, uploadBytes } from "firebase/storage";
 import Swal from "sweetalert2";
 import FailureNotif from "@portal/FailureNotif";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
+import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -24,6 +25,10 @@ export default function Application(props: {
   const gpaRef = useRef(null);
   const linkedinRef = useRef(null);
   const techInterestRef = useRef(null);
+  const scientificBreakthroughRef = useRef(null);
+  const brandCompanyRef = useRef(null);
+  const passionRef = useRef(null);
+  const funFactRef = useRef(null);
   const whyKTPRef = useRef(null);
   const resumeRef = useRef(null);
   const pfpRef = useRef(null);
@@ -42,12 +47,14 @@ export default function Application(props: {
   }, props.user);
 
   useEffect(() => {
-    if(new Date() > new Date(2023, 3, 3, 18, 45) && !props.readonly) {
+    if (new Date() > new Date(2024, 1, 9, 18, 45) && !props.readonly) {
       Swal.fire({
         icon: "error",
         title: "Applications are closed!",
-        text: "Applications for Spring 2023 are closed.",
-      }).then(() => {window.location.href = "https://ktpnu.com"});
+        text: "Applications for Winter 2024 are closed.",
+      }).then(() => {
+        window.location.href = "https://ktpnu.com";
+      });
     }
   }, []);
 
@@ -62,6 +69,11 @@ export default function Application(props: {
       linkedinRef.current.value = props.userEntry.linkedinURL || "";
       techInterestRef.current.value = props.userEntry.techInterest || "";
       whyKTPRef.current.value = props.userEntry.whyKTP || "";
+      scientificBreakthroughRef.current.value =
+        props.userEntry.scientificBreakthrough || "";
+      brandCompanyRef.current.value = props.userEntry.brandCompany || "";
+      passionRef.current.value = props.userEntry.passion || "";
+      funFactRef.current.value = props.userEntry.funFact || "";
       if (props.userEntry.PfpURL) {
         pfpImgRef.current.src = props.userEntry.PfpURL;
       }
@@ -86,6 +98,10 @@ export default function Application(props: {
       linkedinURL: "",
       techInterest: "",
       whyKTP: "",
+      scientificBreakthrough: "",
+      brandCompany: "",
+      passion: "",
+      funFact: "",
       completed_application: true,
     };
     ps.fullName = nameRef.current.value;
@@ -97,6 +113,10 @@ export default function Application(props: {
     ps.linkedinURL = linkedinRef.current.value;
     ps.techInterest = techInterestRef.current.value;
     ps.whyKTP = whyKTPRef.current.value;
+    ps.scientificBreakthrough = scientificBreakthroughRef.current.value;
+    ps.brandCompany = brandCompanyRef.current.value;
+    ps.passion = passionRef.current.value;
+    ps.funFact = funFactRef.current.value;
     if (!ps.fullName) {
       nameRef.current.classList.add("bg-red-100");
       skip = true;
@@ -133,11 +153,28 @@ export default function Application(props: {
       skip = true;
       Swal.fire({
         icon: "error",
-        text: "We appreciate the enthusiasm, but your tech interests can't be more than 100 words!",
+        text:
+          "We appreciate the enthusiasm, but your tech interests can't be more than 100 words!",
       });
     }
     if (!ps.whyKTP) {
       whyKTPRef.current.classList.add("bg-red-100");
+      skip = true;
+    }
+    if (!ps.scientificBreakthrough) {
+      scientificBreakthroughRef.current.classList.add("bg-red-100");
+      skip = true;
+    }
+    if (!ps.brandCompany) {
+      brandCompanyRef.current.classList.add("bg-red-100");
+      skip = true;
+    }
+    if (!ps.passion) {
+      passionRef.current.classList.add("bg-red-100");
+      skip = true;
+    }
+    if (!ps.funFact) {
+      funFactRef.current.classList.add("bg-red-100");
       skip = true;
     }
     if (ps.whyKTP && ps.whyKTP.trim().split(/\s+/).length > 250) {
@@ -145,7 +182,8 @@ export default function Application(props: {
       skip = true;
       Swal.fire({
         icon: "error",
-        text: "We appreciate the enthusiasm, but your 'Why KTP?' can't be more than 250 words!",
+        text:
+          "We appreciate the enthusiasm, but your 'Why KTP?' can't be more than 250 words!",
       });
     }
     if (!resumeAdded) {
@@ -160,7 +198,8 @@ export default function Application(props: {
       Swal.fire({
         icon: "warning",
         title: "Are you sure?",
-        text: "Once you submit, you will not be able to edit your application. You can submit any time before the deadline.",
+        text:
+          "Once you submit, you will not be able to edit your application. You can submit any time before the deadline.",
         showCancelButton: true,
         confirmButtonText: "Yes, I'm ready!",
       }).then(async (res) => {
@@ -175,7 +214,13 @@ export default function Application(props: {
           }).then(() => {
             window.location.reload();
           }).catch(() => {
-            Swal.fire({icon:'error',title:'Error submitting application',text:'Please email help@ktpnu.com if this issue persists.'}).then(() => {window.location.reload()});
+            Swal.fire({
+              icon: "error",
+              title: "Error submitting application",
+              text: "Please email help@ktpnu.com if this issue persists.",
+            }).then(() => {
+              window.location.reload();
+            });
           });
         }
       });
@@ -203,8 +248,8 @@ export default function Application(props: {
                     </h1>
                     <br></br>
                     <h1 className="font-bold">
-                      To join KTP for Spring Rush 2023, complete the application
-                      below by 5:59pm on Monday, April 3rd. Contact
+                      To join KTP for Winter Rush 2024, complete the application
+                      below by 5:59pm on Monday, January 9th. Contact
                       help@ktpnu.com with any questions.
                     </h1>
                   </div>
@@ -245,7 +290,7 @@ export default function Application(props: {
                         }}
                         className={classNames(
                           props.readonly ? "bg-gray-100" : "",
-                          "mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          "mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
                         )}
                       />
                     </div>
@@ -264,7 +309,7 @@ export default function Application(props: {
                         ref={emailRef}
                         className={classNames(
                           props.readonly ? "bg-gray-100" : "",
-                          "mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 bg-gray-100 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                          "mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 bg-gray-100 placeholder:text-gray-400 sm:text-sm sm:leading-6",
                         )}
                       />
                     </div>
@@ -286,7 +331,7 @@ export default function Application(props: {
                         }}
                         className={classNames(
                           props.readonly ? "bg-gray-100" : "",
-                          "mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          "mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
                         )}
                       />
                     </div>
@@ -306,7 +351,7 @@ export default function Application(props: {
                         }}
                         className={classNames(
                           props.readonly ? "bg-gray-100" : "",
-                          "mt-2 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          "mt-2 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
                         )}
                       >
                         <option disabled={props.readonly}>Female</option>
@@ -315,9 +360,22 @@ export default function Application(props: {
                       </select>
                     </div>
                     <div className="col-span-6">
-                      <label className="block text-sm font-medium leading-6 text-gray-900">
-                        Photo
-                      </label>
+                      <div className="flex items-center space-x-1">
+                        <label className="inline-block text-sm font-medium leading-6 text-gray-900">
+                          Photo
+                        </label>
+                        <QuestionMarkCircleIcon
+                          className="cursor-pointer h-3 w-3 text-indigo-700"
+                          onClick={() => {
+                            Swal.fire({
+                              icon: "info",
+                              title: "Why do we need a profile picture?",
+                              text:
+                                "We identify applicants after networking night visually.",
+                            });
+                          }}
+                        />
+                      </div>
                       <div className="mt-2 flex items-center space-x-5">
                         <span className="inline-block h-12 w-12 overflow-hidden rounded-full bg-gray-100">
                           <img
@@ -337,8 +395,9 @@ export default function Application(props: {
                             <input
                               onChange={() => {
                                 removeRedIfApplicable(pfpRef);
-                                var inputElem =
-                                  document.getElementById("photo-upload");
+                                var inputElem = document.getElementById(
+                                  "photo-upload",
+                                );
                                 //@ts-ignore
                                 if (inputElem.files && inputElem.files[0]) {
                                   //@ts-ignore
@@ -346,29 +405,29 @@ export default function Application(props: {
                                   if (
                                     !(
                                       fileName.substring(
-                                        fileName.indexOf("."),
-                                        fileName.length
-                                      ) === ".JPEG" ||
+                                          fileName.indexOf("."),
+                                          fileName.length,
+                                        ) === ".JPEG" ||
                                       fileName.substring(
-                                        fileName.indexOf("."),
-                                        fileName.length
-                                      ) === ".jpeg" ||
+                                          fileName.indexOf("."),
+                                          fileName.length,
+                                        ) === ".jpeg" ||
                                       fileName.substring(
-                                        fileName.indexOf("."),
-                                        fileName.length
-                                      ) === ".png" ||
+                                          fileName.indexOf("."),
+                                          fileName.length,
+                                        ) === ".png" ||
                                       fileName.substring(
-                                        fileName.indexOf("."),
-                                        fileName.length
-                                      ) === ".PNG" ||
+                                          fileName.indexOf("."),
+                                          fileName.length,
+                                        ) === ".PNG" ||
                                       fileName.substring(
-                                        fileName.indexOf("."),
-                                        fileName.length
-                                      ) === ".jpg" ||
+                                          fileName.indexOf("."),
+                                          fileName.length,
+                                        ) === ".jpg" ||
                                       fileName.substring(
-                                        fileName.indexOf("."),
-                                        fileName.length
-                                      ) === ".JPG"
+                                          fileName.indexOf("."),
+                                          fileName.length,
+                                        ) === ".JPG"
                                     )
                                   ) {
                                     Swal.fire({
@@ -382,7 +441,7 @@ export default function Application(props: {
                                     reader.onload = function (e) {
                                       //@ts-ignore
                                       document.getElementById(
-                                        "profPicImg"
+                                        "profPicImg",
                                         //@ts-ignore
                                       ).src = e.target.result;
                                     };
@@ -394,8 +453,8 @@ export default function Application(props: {
                                         props.user.uid +
                                         fileName.substring(
                                           fileName.indexOf("."),
-                                          fileName.length
-                                        )
+                                          fileName.length,
+                                        ),
                                     );
                                     //@ts-ignore
                                     uploadBytes(storageRef, inputElem.files[0])
@@ -406,14 +465,14 @@ export default function Application(props: {
                                             update(
                                               ref(
                                                 database,
-                                                "rush_users/" + props.user.uid
+                                                "rush_users/" + props.user.uid,
                                               ),
                                               {
                                                 PfpURL: downloadURL,
-                                              }
+                                              },
                                             ).then(() => {
                                               console.log(
-                                                "Successfully uploaded profile picture\n"
+                                                "Successfully uploaded profile picture\n",
                                               );
                                               setPfpAdded(true);
                                             });
@@ -471,7 +530,7 @@ export default function Application(props: {
                         }}
                         className={classNames(
                           props.readonly ? "bg-gray-100" : "",
-                          "mt-2 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          "mt-2 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
                         )}
                       >
                         <option disabled={props.readonly}>Freshman</option>
@@ -499,7 +558,7 @@ export default function Application(props: {
                         }}
                         className={classNames(
                           props.readonly ? "bg-gray-100" : "",
-                          "mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          "mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
                         )}
                       />
                     </div>
@@ -521,7 +580,7 @@ export default function Application(props: {
                         }}
                         className={classNames(
                           props.readonly ? "bg-gray-100" : "",
-                          "mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          "mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
                         )}
                       />
                     </div>
@@ -536,7 +595,7 @@ export default function Application(props: {
                         <span
                           className={classNames(
                             props.readonly ? "bg-gray-100" : "",
-                            "inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm"
+                            "inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm",
                           )}
                         >
                           linkedin.com/in/
@@ -552,7 +611,7 @@ export default function Application(props: {
                           }}
                           className={classNames(
                             props.readonly ? "bg-gray-100" : "",
-                            "block w-full flex-1 rounded-none rounded-r-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            "block w-full flex-1 rounded-none rounded-r-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
                           )}
                           placeholder="your-username"
                         />
@@ -581,8 +640,9 @@ export default function Application(props: {
                               className="sr-only"
                               onChange={() => {
                                 removeRedIfApplicable(resumeRef);
-                                var inputElem =
-                                  document.getElementById("resume-upload");
+                                var inputElem = document.getElementById(
+                                  "resume-upload",
+                                );
                                 //@ts-ignore
                                 if (inputElem.files && inputElem.files[0]) {
                                   //@ts-ignore
@@ -590,13 +650,13 @@ export default function Application(props: {
                                   if (
                                     !(
                                       fileName.substring(
-                                        fileName.indexOf("."),
-                                        fileName.length
-                                      ) === ".pdf" ||
+                                          fileName.indexOf("."),
+                                          fileName.length,
+                                        ) === ".pdf" ||
                                       fileName.substring(
-                                        fileName.indexOf("."),
-                                        fileName.length
-                                      ) === ".PDF"
+                                          fileName.indexOf("."),
+                                          fileName.length,
+                                        ) === ".PDF"
                                     )
                                   ) {
                                     Swal.fire({
@@ -611,15 +671,15 @@ export default function Application(props: {
                                         props.user.uid +
                                         fileName.substring(
                                           fileName.indexOf("."),
-                                          fileName.length
-                                        )
+                                          fileName.length,
+                                        ),
                                     );
 
                                     document
                                       .getElementById("resume-name")
                                       .classList.remove("hidden");
                                     document.getElementById(
-                                      "resume-name-text"
+                                      "resume-name-text",
                                     ).textContent = fileName;
                                     //@ts-ignore
                                     uploadBytes(storageRef, inputElem.files[0])
@@ -629,14 +689,14 @@ export default function Application(props: {
                                             update(
                                               ref(
                                                 database,
-                                                "rush_users/" + props.user.uid
+                                                "rush_users/" + props.user.uid,
                                               ),
                                               {
                                                 ResumeURL: downloadURL,
-                                              }
+                                              },
                                             );
                                             console.log(
-                                              "Successfully uploaded resume\n"
+                                              "Successfully uploaded resume\n",
                                             );
                                             setResumeAdded(true);
                                           })
@@ -656,7 +716,8 @@ export default function Application(props: {
                             <p
                               className="text-sm font-medium"
                               id="resume-name-text"
-                            ></p>
+                            >
+                            </p>
                             <CheckCircleIcon className="ml-1.5 h-5 w-5 flex-shrink-0 text-green-400" />
                           </div>
                         </div>
@@ -676,7 +737,8 @@ export default function Application(props: {
                   </h3>
                   <p className="mt-1 text-sm text-gray-500">
                     These questions will gauge your specific interests, as well
-                    as your ability to communicate ideas.
+                    as your ability to communicate ideas. These questions are
+                    NOT saved if you leave the page.
                   </p>
                 </div>
                 <div className="mt-5 space-y-6 md:col-span-2 md:mt-0">
@@ -699,7 +761,59 @@ export default function Application(props: {
                         }}
                         className={classNames(
                           props.readonly ? "bg-gray-100" : "",
-                          "block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6"
+                          "block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6",
+                        )}
+                      />
+                    </div>
+                    <p className="mt-2 text-sm text-gray-500">Max. 100 words</p>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="scientific-breakthrough"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      What do you believe has been the most influential
+                      scientific/technological breakthrough of the last 100
+                      years and why?
+                    </label>
+                    <div className="mt-2">
+                      <textarea
+                        id="scientific-breakthrough"
+                        name="scientific-breakthrough"
+                        rows={3}
+                        readOnly={props.readonly}
+                        ref={scientificBreakthroughRef}
+                        onChange={() => {
+                          removeRedIfApplicable(scientificBreakthroughRef);
+                        }}
+                        className={classNames(
+                          props.readonly ? "bg-gray-100" : "",
+                          "block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6",
+                        )}
+                      />
+                    </div>
+                    <p className="mt-2 text-sm text-gray-500">Max. 100 words</p>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="company-resonate"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      What is a brand or company you resonate with?
+                    </label>
+                    <div className="mt-2">
+                      <textarea
+                        id="company-resonate"
+                        name="company-resonate"
+                        rows={3}
+                        readOnly={props.readonly}
+                        ref={brandCompanyRef}
+                        onChange={() => {
+                          removeRedIfApplicable(brandCompanyRef);
+                        }}
+                        className={classNames(
+                          props.readonly ? "bg-gray-100" : "",
+                          "block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6",
                         )}
                       />
                     </div>
@@ -724,11 +838,63 @@ export default function Application(props: {
                         }}
                         className={classNames(
                           props.readonly ? "bg-gray-100" : "",
-                          "block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6"
+                          "block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6",
                         )}
                       />
                     </div>
                     <p className="mt-2 text-sm text-gray-500">Max. 250 words</p>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="passion-class"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      What is a passion of yours, unrelated to your
+                      major/classes/tech, that you would love to teach a class
+                      about?
+                    </label>
+                    <div className="mt-2">
+                      <textarea
+                        id="passion-class"
+                        name="passion-class"
+                        rows={2}
+                        readOnly={props.readonly}
+                        ref={passionRef}
+                        onChange={() => {
+                          removeRedIfApplicable(passionRef);
+                        }}
+                        className={classNames(
+                          props.readonly ? "bg-gray-100" : "",
+                          "block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6",
+                        )}
+                      />
+                    </div>
+                    <p className="mt-2 text-sm text-gray-500">Max. 50 words</p>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="fun-fact"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Tell us a fun fact.
+                    </label>
+                    <div className="mt-2">
+                      <textarea
+                        id="fun-fact"
+                        name="fun-fact"
+                        rows={2}
+                        readOnly={props.readonly}
+                        ref={funFactRef}
+                        onChange={() => {
+                          removeRedIfApplicable(funFactRef);
+                        }}
+                        className={classNames(
+                          props.readonly ? "bg-gray-100" : "",
+                          "block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6",
+                        )}
+                      />
+                    </div>
+                    <p className="mt-2 text-sm text-gray-500">Max. 50 words</p>
                   </div>
                 </div>
               </div>

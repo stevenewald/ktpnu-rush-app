@@ -7,13 +7,13 @@ admin.initializeApp({
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 //these are not keys, they are IDs
 const cc_signup_doc = new GoogleSpreadsheet(
-  "1qq5zV1d8JwpJpZ4rK-QzaV1uLQTqn4LaW0s2Q5jfZgY"
+  "1D3rx9Dbto13zSasmzZsyenWfaNkL7CF99OdTy1OZj_U"
 );
 const gi_signup_doc = new GoogleSpreadsheet(
-  "1VeQsmP2qiOylvS886eHbPDGS1Azis9xM0CcZQw8Ubp4"
+  "1cuzwPEZOkMMbnKtjE6hD3riR46qiB-XCLrvSR4KwHoo"
 );
 const indiv_signup_doc = new GoogleSpreadsheet(
-  "1xCWzcXQ3b0rHzI2xA3SAy6tUyIUD0uU04qPCSeCgJOE"
+  "1kynwriDoHZLN1XHufx5oyAYuC0EDq1NtZP-nFJ13GtA"
 );
 const creds = require("./creds.json");
 const nodemailer = require("nodemailer");

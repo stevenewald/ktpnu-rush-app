@@ -3,12 +3,12 @@ service firebase.storage {
   match /b/{bucket}/o {
     match /rush_resumes/{objName} {
       allow read: if true;
-      allow write: if request.time.toMillis() < 1680565500000 && request.resource.size < 10 * 1024 * 1024 && objName.matches("^" + request.auth.uid + ".pdf$") || objName.matches("^" + request.auth.uid + ".PDF$");
+      allow write: if request.time.toMillis() < 1704861071000 && request.resource.size < 10 * 1024 * 1024 && objName.matches("^" + request.auth.uid + ".pdf$") || objName.matches("^" + request.auth.uid + ".PDF$");
     }
 
     match /rush_pfps/{objName} {
       allow read: if true;
-      allow write: if request.time.toMillis() < 1680565500000 && request.resource.size < 10 * 1024 * 1024 && (objName.matches("^" + request.auth.uid + ".png$") || objName.matches("^" + request.auth.uid + ".PNG$") || objName.matches("^" + request.auth.uid + ".jpg$") || objName.matches("^" + request.auth.uid + ".JPG$")  || objName.matches("^" + request.auth.uid + ".jpeg$") || objName.matches("^" + request.auth.uid + ".JPEG$"));
+      allow write: if request.time.toMillis() < 1704861071000 && request.resource.size < 10 * 1024 * 1024 && (objName.matches("^" + request.auth.uid + ".png$") || objName.matches("^" + request.auth.uid + ".PNG$") || objName.matches("^" + request.auth.uid + ".jpg$") || objName.matches("^" + request.auth.uid + ".JPG$")  || objName.matches("^" + request.auth.uid + ".jpeg$") || objName.matches("^" + request.auth.uid + ".JPEG$"));
     }
   }
 }

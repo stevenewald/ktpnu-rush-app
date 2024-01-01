@@ -82,6 +82,38 @@ export default function ApplicantDetails(props: {
             </dd>
           </div>
           <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+            <dt className="text-sm font-medium text-gray-500">
+              What is a brand or company you resonate with?
+            </dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+              {props.user.brandCompany}
+            </dd>
+          </div>
+          <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+            <dt className="text-sm font-medium text-gray-500">
+              What do you believe has been the most influential scientific/technological breakthrough of the last 100 years and why?
+            </dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+              {props.user.scientificBreakthrough}
+            </dd>
+          </div>
+          <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+            <dt className="text-sm font-medium text-gray-500">
+              What is a passion of yours, unrelated to your major/classes/tech, that you would love to teach a class about?
+            </dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+              {props.user.passion}
+            </dd>
+          </div>
+          <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+            <dt className="text-sm font-medium text-gray-500">
+              Tell us a fun fact.
+            </dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+              {props.user.funFact}
+            </dd>
+          </div>
+          <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Links</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
               <ul

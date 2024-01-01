@@ -630,7 +630,7 @@ export default function DelibPortal(props: { user: any }) {
                         <div
                           onClick={() => {
                             const popupWidth =
-                              window.screen.width > 640 ? "600px" : "90vw";
+                              window.screen.width > 640 ? "750px" : "90vw";
                             swalReact.fire({
                               html: <ApplicantDetails isAdmin={isAdmin} user={candidate} uid={uid} database={database} swapTech={() => {currGroup[uid].cs=!currGroup[uid].cs;setUserGroups(userGroups);}} />,
                               width: popupWidth,

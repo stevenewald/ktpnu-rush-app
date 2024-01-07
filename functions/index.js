@@ -33,22 +33,32 @@ exports.reserveCCTime = functions.https.onCall(async (data, context) => {
   await cc_signup_doc.loadInfo();
   const sheet = cc_signup_doc.sheetsByIndex[0];
   await sheet.loadCells("A8:K83");
-  const toReserve = sheet.getCell(data.i, data.j);
-  if (toReserve.value) {
+  const toReserve1 = sheet.getCell(data.i1, data.j1);
+  const toReserve2 = sheet.getCell(data.i2, data.j2);
+  if (toReserve1.value || toReserve2.value) {
     console.log("Time already reserved!");
     return false;
   } else {
-    toReserve.value = data.name + " (" + data.phone + ")";
+    toReserve1.value = data.name + " (" + data.phone + ")";
+    toReserve2.value = data.name + " (" + data.phone + ")";
     await sheet.saveUpdatedCells();
     rush_users.child(context.auth.uid).update({
-      selected_cc_timeslot: "Your meeting is with " +
-        sheet.getCell(data.i, data.j - 2).value +
+      selected_cc_timeslot: "Your first meeting is with " +
+        sheet.getCell(data.i1, data.j1 - 2).value +
         " at " +
-        sheet.getCell(data.i, data.j - 1).value +
+        sheet.getCell(data.i1, data.j1 - 1).value +
         ". The timeslot is " +
-        sheet.getCell(data.i, 0).value +
+        sheet.getCell(data.i1, 0).value +
         " on " +
-        sheet.getCell(data.i, 1).value,
+        sheet.getCell(data.i1, 1).value +
+        ". Your second meeting is with " +
+        sheet.getCell(data.i2, data.j2 - 2).value +
+        " at " +
+        sheet.getCell(data.i2, data.j2 - 1).value +
+        ". The timeslot is " +
+        sheet.getCell(data.i2, 0).value +
+        " on " +
+        sheet.getCell(data.i2, 1).value,
     });
     return true;
   }
@@ -118,7 +128,7 @@ exports.getCCTimes = functions.https.onCall(async (data, context) => {
           interviewer_ids.set(interviewer, interviewer_ids.size);
         }
         const interviewer_id = interviewer_ids.get(interviewer);
-        
+
         times.push({
           time: sheet.getCell(i, 0).value,
           location: sheet.getCell(i, j + 1).value,

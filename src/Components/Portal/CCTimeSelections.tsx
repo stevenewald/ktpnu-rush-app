@@ -6,40 +6,106 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
+interface TimeType {
+  time: string;
+  location: string;
+  date: string;
+  interviewer_id: number;
+  i: number;
+  j: number;
+}
+
 export default function CCTimeSelections(props: {
-  times: {
-    time: string;
-    location: string;
-    date: string;
-    interviewer_id: number;
-    i: number;
-    j: number;
-  }[];
+  times: TimeType[];
   userDBEntry: ProfileType;
   selectMethod: string;
 }) {
-  function buttonBG(time: any, selectedTime: any) {
-    if (selectedTime.time_1_ij) {
-      if (
-        time.i == selectedTime.time_1_ij[0] &&
-        time.j == selectedTime.time_1_ij[1]
-      ) {
-        return "bg-green-600";
+  function handleSecondClick(time: TimeType) {
+    const coffeeOptions: any = {
+      icon: "info",
+      title: "Are you sure you want to select these time slots?",
+      width: 600,
+      html: "Time 1: " + selectedTime.time.time + " at " +
+        selectedTime.time.location + " on " + selectedTime.time.date +
+        "<br>Time 2: " + time.time + " at " + time.location + " on " +
+        time.date +
+        "<br><br>You will not be able to change these time slots after you confirm. Enter your phone number to confirm your selection.",
+      input: "text",
+      showCancelButton: true,
+    };
+    Swal.fire(
+      coffeeOptions,
+    ).then((res) => {
+      if (res.isConfirmed) {
+        Swal.fire({
+          icon: "info",
+          text: "Please wait while your timeslot is reserved...",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          allowEnterKey: false,
+        });
+        Swal.showLoading();
+        if (res.value.length == 0) {
+          Swal.close();
+          return;
+        }
+        firebase
+          .functions()
+          .httpsCallable("reserveCCTime")({
+            i1: selectedTime.time.i,
+            j1: selectedTime.time.j,
+            i2: time.i,
+            j2: time.j,
+            name: props.userDBEntry.fullName,
+            phone: res.value,
+          })
+          .then((res: any) => {
+            if (res.data) {
+              window.location.reload();
+            } else {
+              Swal.fire({
+                icon: "error",
+                text:
+                  "This time slot is no longer available. Please refresh the page and try again.",
+              }).then(() => {
+                window.location.reload();
+              });
+            }
+          });
       }
+    });
+  }
+
+  function buttonBG(time: TimeType, selectedTime: { time?: TimeType }) {
+    if (selectedTime.time && time === selectedTime.time) {
+      return "px-[22px] bg-green-600";
     }
-    if (selectedTime.time_1_interviewer_id) {
-      if (time.interviewer_id == selectedTime.time_1_interviewer_id) {
-        return "bg-gray-600";
+    if (selectedTime.time!=null) {
+      if (
+        selectedTime.time.interviewer_id === time.interviewer_id
+      ) {
+        return "bg-gray-600 pointer-events-none";
       }
     }
     return "bg-indigo-600 hover:bg-indigo-500";
   }
 
+  function buttonText(time: TimeType, selectedTime: { time?: TimeType }) {
+    if (selectedTime.time!=null && time === selectedTime.time) {
+      return "Selected";
+    }
+    if (selectedTime.time!=null) {
+      if (time.interviewer_id == selectedTime.time.interviewer_id) {
+        return "Unavailable";
+      }
+    }
+    return "Select Time";
+  }
+
   //@ts-ignore
   const [selectedTime, setSelectedTime]: [
     {
-      time_1_ij?: [number, number];
-      time_1_interviewer_id?: number;
+      time?: TimeType;
     },
     any,
   ] = useState({});
@@ -96,62 +162,27 @@ export default function CCTimeSelections(props: {
                           <button
                             type="button"
                             onClick={() => {
-                              const coffeeOptions: any = {
-                                icon: "info",
-                                title:
-                                  "Are you sure you want to select this time slot?",
-                                text:
-                                  "You will not be able to change this time slot after you select it. Enter your phone number to confirm your selection.",
-                                input: "text",
-                                showCancelButton: true,
-                              };
-                              Swal.fire(
-                                coffeeOptions,
-                              ).then((res) => {
-                                if (res.isConfirmed) {
-                                  Swal.fire({
-                                    icon: "info",
-                                    text:
-                                      "Please wait while your timeslot is reserved...",
-                                    allowOutsideClick: false,
-                                    allowEscapeKey: false,
-                                    allowEnterKey: false,
-                                  });
-                                  Swal.showLoading();
-                                  if (res.value.length == 0) {
-                                    Swal.close();
-                                    return;
-                                  }
-                                  firebase
-                                    .functions()
-                                    .httpsCallable("reserveCCTime")({
-                                      i: time.i,
-                                      j: time.j,
-                                      name: props.userDBEntry.fullName,
-                                      phone: res.value,
-                                    })
-                                    .then((res: any) => {
-                                      if (res.data) {
-                                        window.location.reload();
-                                      } else {
-                                        Swal.fire({
-                                          icon: "error",
-                                          text:
-                                            "This time slot is no longer available. Please refresh the page and try again.",
-                                        }).then(() => {
-                                          window.location.reload();
-                                        });
-                                      }
-                                    });
+                              if (selectedTime.time!=null) {
+                                if (
+                                  selectedTime.time === time
+                                ) {
+                                  // un selecting
+                                  setSelectedTime({});
+                                } else {
+                                  handleSecondClick(time);
                                 }
-                              });
+                              } else {
+                                setSelectedTime({
+                                  time: time,
+                                });
+                              }
                             }}
                             className={classNames(
                               "block rounded-md  py-2 px-3 text-center text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600",
                               buttonBG(time, selectedTime),
                             )}
                           >
-                            Select Time
+                            {buttonText(time, selectedTime)}
                           </button>
                         </td>
                       </tr>

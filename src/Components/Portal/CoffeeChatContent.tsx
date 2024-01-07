@@ -33,11 +33,16 @@ export default function CoffeeChatContent(props: { userDBEntry: ProfileType }) {
             Congrats, you moved on to coffee chats!
           </h2>
           {!props.userDBEntry?.selected_cc_timeslot && (
-            <p className="mt-6 text-lg leading-8 text-gray-600">
-              The coffee chats are meant to be a casual and relaxed two-way 20
-              min chat for us to get to know you a bit better, and for you to
-              get to know us! As such, the dress code is casual.
-            </p>
+            <div>
+              <p className="mt-6 text-lg leading-8 text-gray-600">
+                The coffee chats are meant to be a casual and relaxed two-way 20
+                min chat for us to get to know you a bit better, and for you to
+                get to know us! As such, the dress code is casual.
+              </p>
+              <p className="mt-6 text-lg leading-8 text-gray-600">
+                Please select two timeslots for your coffee chats below.
+              </p>
+            </div>
           )}
           {!props.userDBEntry?.selected_cc_timeslot &&
             Object.keys(times).length == 0 && (

@@ -1,6 +1,8 @@
 import CCTimeSelections from "@portal/CCTimeSelections";
 import { useContext, useEffect, useState } from "react";
 import { FirebaseContext } from "@framework/FirebaseContext";
+
+import Swal from "sweetalert2";
 export default function CoffeeChatContent(props: { userDBEntry: ProfileType }) {
   const firebase = useContext(FirebaseContext).firebase;
   const [times, setTimes]: [
@@ -15,7 +17,19 @@ export default function CoffeeChatContent(props: { userDBEntry: ProfileType }) {
     any,
   ] = useState([]);
 
+  if (window.innerWidth < 660) {
+    Swal.fire({
+      icon: "warning",
+      title: "Please use a non-mobile device to select your coffee chat times.",
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      allowEnterKey: false,
+    });
+  }
+
   useEffect(() => {
+    if (window.innerWidth < 660) return;
     if (!props.userDBEntry) return;
     if (props.userDBEntry.selected_cc_timeslot) return;
     firebase

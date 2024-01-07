@@ -1,12 +1,20 @@
-import TimeSelections from "@portal/TimeSelectionsWithDate";
+import CCTimeSelections from "@portal/CCTimeSelections";
 import { useContext, useEffect, useState } from "react";
 import { FirebaseContext } from "@framework/FirebaseContext";
 export default function CoffeeChatContent(props: { userDBEntry: ProfileType }) {
   const firebase = useContext(FirebaseContext).firebase;
   const [times, setTimes]: [
-    { time: string; location: string; date: string; i: number; j: number }[],
+    {
+      time: string;
+      location: string;
+      date: string;
+      interviewer_id: number;
+      i: number;
+      j: number;
+    }[],
     any,
   ] = useState([]);
+
   useEffect(() => {
     if (!props.userDBEntry) return;
     if (props.userDBEntry.selected_cc_timeslot) return;
@@ -54,7 +62,7 @@ export default function CoffeeChatContent(props: { userDBEntry: ProfileType }) {
       </div>
       {Object.keys(times).length > 0 &&
         !props.userDBEntry?.selected_cc_timeslot && (
-        <TimeSelections
+        <CCTimeSelections
           times={times}
           userDBEntry={props.userDBEntry}
           selectMethod={"coffee_chats"}

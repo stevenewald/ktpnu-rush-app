@@ -7,14 +7,15 @@ admin.initializeApp({
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 //these are not keys, they are IDs
 const cc_signup_doc = new GoogleSpreadsheet(
-  "1D3rx9Dbto13zSasmzZsyenWfaNkL7CF99OdTy1OZj_U",
+  functions.config().gdoc_ids.cc,
 );
 const gi_signup_doc = new GoogleSpreadsheet(
-  "1cuzwPEZOkMMbnKtjE6hD3riR46qiB-XCLrvSR4KwHoo",
+  functions.config().gdoc_ids.gi,
 );
 const indiv_signup_doc = new GoogleSpreadsheet(
-  "1kynwriDoHZLN1XHufx5oyAYuC0EDq1NtZP-nFJ13GtA",
+  functions.config().gdoc_ids.indiv,
 );
+
 const creds = require("./creds.json");
 const nodemailer = require("nodemailer");
 
@@ -104,15 +105,27 @@ exports.getCCTimes = functions.https.onCall(async (data, context) => {
   await cc_signup_doc.loadInfo();
   const sheet = cc_signup_doc.sheetsByIndex[0];
   await sheet.loadCells("A8:K83");
+
+  const interviewer_ids = new Map();
+
   for (var i = 7; i < 83; i += 1) {
     //i is the row
     for (var j = 2; j < 11; j += 3) {
       //j is the col
       if (sheet.getCell(i, j).value && !sheet.getCell(i, j + 2).value) {
+        const interviewer = sheet.getCell(i, j).value;
+        if (!interviewer_ids.has(interviewer)) {
+          interviewer_ids.set(interviewer, interviewer_ids.size);
+        }
+        const interviewer_id = interviewer_ids.get(interviewer);
+        
         times.push({
           time: sheet.getCell(i, 0).value,
           location: sheet.getCell(i, j + 1).value,
           date: sheet.getCell(i, 1).value,
+          // interviewer id allows us to prevent double booking the same interviewer
+          // without revealing their identity to the client
+          interviewer_id: interviewer_id,
           i: i,
           j: j + 2,
         });

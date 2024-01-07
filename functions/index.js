@@ -7,13 +7,13 @@ admin.initializeApp({
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 //these are not keys, they are IDs
 const cc_signup_doc = new GoogleSpreadsheet(
-  "1D3rx9Dbto13zSasmzZsyenWfaNkL7CF99OdTy1OZj_U"
+  "1D3rx9Dbto13zSasmzZsyenWfaNkL7CF99OdTy1OZj_U",
 );
 const gi_signup_doc = new GoogleSpreadsheet(
-  "1cuzwPEZOkMMbnKtjE6hD3riR46qiB-XCLrvSR4KwHoo"
+  "1cuzwPEZOkMMbnKtjE6hD3riR46qiB-XCLrvSR4KwHoo",
 );
 const indiv_signup_doc = new GoogleSpreadsheet(
-  "1kynwriDoHZLN1XHufx5oyAYuC0EDq1NtZP-nFJ13GtA"
+  "1kynwriDoHZLN1XHufx5oyAYuC0EDq1NtZP-nFJ13GtA",
 );
 const creds = require("./creds.json");
 const nodemailer = require("nodemailer");
@@ -31,7 +31,7 @@ exports.reserveCCTime = functions.https.onCall(async (data, context) => {
   await cc_signup_doc.useServiceAccountAuth(creds);
   await cc_signup_doc.loadInfo();
   const sheet = cc_signup_doc.sheetsByIndex[0];
-  await sheet.loadCells("A8:K45");
+  await sheet.loadCells("A8:K83");
   const toReserve = sheet.getCell(data.i, data.j);
   if (toReserve.value) {
     console.log("Time already reserved!");
@@ -40,14 +40,14 @@ exports.reserveCCTime = functions.https.onCall(async (data, context) => {
     toReserve.value = data.name + " (" + data.phone + ")";
     await sheet.saveUpdatedCells();
     rush_users.child(context.auth.uid).update({
-      selected_cc_timeslot:
-        "Your meeting is with " +
+      selected_cc_timeslot: "Your meeting is with " +
         sheet.getCell(data.i, data.j - 2).value +
         " at " +
         sheet.getCell(data.i, data.j - 1).value +
         ". The timeslot is " +
         sheet.getCell(data.i, 0).value +
-        " on Tuesday, April 4th.",
+        " on " +
+        sheet.getCell(data.i, 1).value,
     });
     return true;
   }
@@ -61,11 +61,11 @@ exports.reserveGITime = functions.https.onCall(async (data, context) => {
   var numTimeSignups = sheet.getCell(data.i, 1).value;
   var reserveCol = numTimeSignups + 2;
   console.log(
-    "Attempting to reserve row " + data.i + " and column " + reserveCol
+    "Attempting to reserve row " + data.i + " and column " + reserveCol,
   );
   if (sheet.getCell(data.i, reserveCol).value) {
     console.log(
-      "Time already reserved by " + sheet.getCell(data.i, reserveCol).value
+      "Time already reserved by " + sheet.getCell(data.i, reserveCol).value,
     );
     reserveCol = 0;
     numTimeSignups = 0;
@@ -103,15 +103,16 @@ exports.getCCTimes = functions.https.onCall(async (data, context) => {
   await cc_signup_doc.useServiceAccountAuth(creds);
   await cc_signup_doc.loadInfo();
   const sheet = cc_signup_doc.sheetsByIndex[0];
-  await sheet.loadCells("A8:K45");
-  for (var i = 7; i < 45; i += 1) {
+  await sheet.loadCells("A8:K83");
+  for (var i = 7; i < 83; i += 1) {
     //i is the row
-    for (var j = 1; j < 10; j += 3) {
+    for (var j = 2; j < 11; j += 3) {
       //j is the col
       if (sheet.getCell(i, j).value && !sheet.getCell(i, j + 2).value) {
         times.push({
           time: sheet.getCell(i, 0).value,
           location: sheet.getCell(i, j + 1).value,
+          date: sheet.getCell(i, 1).value,
           i: i,
           j: j + 2,
         });
@@ -134,9 +135,8 @@ exports.reserveIndivTime = functions.https.onCall(async (data, context) => {
     toReserve.value = data.name + " (" + data.phone + ")";
     await sheet.saveUpdatedCells();
     rush_users.child(context.auth.uid).update({
-      selected_indiv_timeslot:
-        "Your interview is at " +
-        sheet.getCell(data.i, data.j+3).value +
+      selected_indiv_timeslot: "Your interview is at " +
+        sheet.getCell(data.i, data.j + 3).value +
         " on " +
         sheet.getCell(data.i, 0).value +
         ".",
@@ -146,13 +146,18 @@ exports.reserveIndivTime = functions.https.onCall(async (data, context) => {
 });
 
 exports.getIndivTimes = functions.https.onCall(async (data, context) => {
-  csInterviewers = {"Steve":null, "Alexis":null, "Akash":null, "Eagan":null};
+  csInterviewers = {
+    "Steve": null,
+    "Alexis": null,
+    "Akash": null,
+    "Eagan": null,
+  };
   times = [];
   await indiv_signup_doc.useServiceAccountAuth(creds);
   await indiv_signup_doc.loadInfo();
   const sheet = indiv_signup_doc.sheetsByIndex[0];
   await sheet.loadCells("A3:U14");
-  if(data.cs) {
+  if (data.cs) {
     console.log("Requesting CS times");
   } else {
     console.log("Requesting non cs times");
@@ -161,15 +166,25 @@ exports.getIndivTimes = functions.https.onCall(async (data, context) => {
     //i is the row
     for (var j = 4; j < 21; j += 4) {
       //j is the col
-      if (sheet.getCell(i, j).value && sheet.getCell(i,j-1).value && sheet.getCell(i,j-2).value && !sheet.getCell(i, j - 3).value) {
-        if(data.cs && (sheet.getCell(i,j-1).value in csInterviewers || sheet.getCell(i,j-2).value in csInterviewers)) {
+      if (
+        sheet.getCell(i, j).value && sheet.getCell(i, j - 1).value &&
+        sheet.getCell(i, j - 2).value && !sheet.getCell(i, j - 3).value
+      ) {
+        if (
+          data.cs &&
+          (sheet.getCell(i, j - 1).value in csInterviewers ||
+            sheet.getCell(i, j - 2).value in csInterviewers)
+        ) {
           times.push({
             time: sheet.getCell(i, 0).value,
             location: sheet.getCell(i, j).value,
             i: i,
             j: j - 3,
           });
-        } else if(!data.cs && !(sheet.getCell(i,j-1).value in csInterviewers) && !(sheet.getCell(i, j-2).value in csInterviewers)) {
+        } else if (
+          !data.cs && !(sheet.getCell(i, j - 1).value in csInterviewers) &&
+          !(sheet.getCell(i, j - 2).value in csInterviewers)
+        ) {
           times.push({
             time: sheet.getCell(i, 0).value,
             location: sheet.getCell(i, j).value,

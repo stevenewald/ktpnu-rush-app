@@ -1,12 +1,17 @@
 import TimeSelections from "@portal/TimeSelections";
-import { useEffect, useState, useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FirebaseContext } from "@framework/FirebaseContext";
-export default function GroupInterviewContent(props: { userDBEntry: ProfileType }) {
+export default function GroupInterviewContent(
+  props: { userDBEntry: ProfileType },
+) {
   const firebase = useContext(FirebaseContext).firebase;
-  const [times, setTimes]: [{time:string, i:number,j:number,location:string}[], any] = useState([]);
+  const [times, setTimes]: [
+    { time: string; i: number; j: number; location: string }[],
+    any,
+  ] = useState([]);
   useEffect(() => {
-    if(!props.userDBEntry) return;
-    if(props.userDBEntry.selected_gi_timeslot) return;
+    if (!props.userDBEntry) return;
+    if (props.userDBEntry.selected_gi_timeslot) return;
     firebase
       .functions()
       .httpsCallable("getGITimes")()
@@ -24,22 +29,22 @@ export default function GroupInterviewContent(props: { userDBEntry: ProfileType 
           {!props.userDBEntry?.selected_gi_timeslot && (
             <p className="mt-6 text-lg leading-8 text-gray-600">
               Group interviews will take place in Tech M345. You'll have the
-            opportunity to meet many KTP members, learn more about our
-            organization, and hopefully move on to the next round. The dress
-            code is business casual.
+              opportunity to meet many KTP members, learn more about our
+              organization, and hopefully move on to the next round. The dress
+              code is business casual.
             </p>
           )}
           {!props.userDBEntry?.selected_gi_timeslot &&
             Object.keys(times).length == 0 && (
-              <p className="mt-6 text-lg leading-8 text-gray-600">
-                Loading available timeslots...
-              </p>
-            )}
+            <p className="mt-6 text-lg leading-8 text-gray-600">
+              Loading available timeslots...
+            </p>
+          )}
           {props.userDBEntry?.selected_gi_timeslot && (
             <>
               <p className="mt-6 text-lg leading-8 text-gray-600">
-                {props.userDBEntry.selected_gi_timeslot} Please dress business
-                casual.
+                {props.userDBEntry.selected_gi_timeslot}{" "}
+                Please dress business casual.
               </p>
             </>
           )}
@@ -47,8 +52,12 @@ export default function GroupInterviewContent(props: { userDBEntry: ProfileType 
       </div>
       {Object.keys(times).length > 0 &&
         !props.userDBEntry?.selected_gi_timeslot && (
-          <TimeSelections times={times} userDBEntry={props.userDBEntry} selectMethod={"group_interviews"}/>
-        )}
+        <TimeSelections
+          times={times}
+          userDBEntry={props.userDBEntry}
+          selectMethod={"group_interviews"}
+        />
+      )}
     </div>
   );
 }

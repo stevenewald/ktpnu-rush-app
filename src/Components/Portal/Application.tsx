@@ -249,7 +249,7 @@ export default function Application(props: {
                     <br></br>
                     <h1 className="font-bold">
                       To join KTP for Winter Rush 2024, complete the application
-                      below by 5:59pm on Monday, January 9th. Contact
+                      below by 7:00pm on Monday, January 8th. Contact
                       help@ktpnu.com with any questions.
                     </h1>
                   </div>

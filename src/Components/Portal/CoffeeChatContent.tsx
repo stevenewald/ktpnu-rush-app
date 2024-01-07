@@ -1,14 +1,14 @@
-import TimeSelections from "@portal/TimeSelections";
-import { useEffect, useState, useContext } from "react";
+import TimeSelections from "@portal/TimeSelectionsWithDate";
+import { useContext, useEffect, useState } from "react";
 import { FirebaseContext } from "@framework/FirebaseContext";
 export default function CoffeeChatContent(props: { userDBEntry: ProfileType }) {
   const firebase = useContext(FirebaseContext).firebase;
   const [times, setTimes]: [
-    { time: string; location: string; i: number; j: number }[],
-    any
+    { time: string; location: string; date: string; i: number; j: number }[],
+    any,
   ] = useState([]);
   useEffect(() => {
-    if(!props.userDBEntry) return;
+    if (!props.userDBEntry) return;
     if (props.userDBEntry.selected_cc_timeslot) return;
     firebase
       .functions()
@@ -33,15 +33,15 @@ export default function CoffeeChatContent(props: { userDBEntry: ProfileType }) {
           )}
           {!props.userDBEntry?.selected_cc_timeslot &&
             Object.keys(times).length == 0 && (
-              <p className="mt-6 text-lg leading-8 text-gray-600">
-                Loading available timeslots...
-              </p>
-            )}
+            <p className="mt-6 text-lg leading-8 text-gray-600">
+              Loading available timeslots...
+            </p>
+          )}
           {props.userDBEntry?.selected_cc_timeslot && (
             <>
               <p className="mt-6 text-lg leading-8 text-gray-600">
-                {props.userDBEntry.selected_cc_timeslot} Please dress business
-                casual.
+                {props.userDBEntry.selected_cc_timeslot}{" "}
+                Please dress business casual.
               </p>
               <p className="mt-6 text-lg leading-8 text-gray-600">
                 If you cannot find your interviewer, reach out via phone. If you
@@ -54,8 +54,12 @@ export default function CoffeeChatContent(props: { userDBEntry: ProfileType }) {
       </div>
       {Object.keys(times).length > 0 &&
         !props.userDBEntry?.selected_cc_timeslot && (
-          <TimeSelections times={times} userDBEntry={props.userDBEntry} selectMethod={"coffee_chats"}/>
-        )}
+        <TimeSelections
+          times={times}
+          userDBEntry={props.userDBEntry}
+          selectMethod={"coffee_chats"}
+        />
+      )}
     </div>
   );
 }

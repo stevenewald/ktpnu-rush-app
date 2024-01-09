@@ -80,6 +80,9 @@ export default function CCTimeSelections(props: {
     if (selectedTime.time && time === selectedTime.time) {
       return "px-[22px] bg-green-600";
     }
+    if (selectedTime.time && time.time === selectedTime.time.time) {
+      return "bg-gray-600 pointer-events-none";
+    }
     if (selectedTime.time!=null) {
       if (
         selectedTime.time.interviewer_id === time.interviewer_id
@@ -93,6 +96,9 @@ export default function CCTimeSelections(props: {
   function buttonText(time: TimeType, selectedTime: { time?: TimeType }) {
     if (selectedTime.time!=null && time === selectedTime.time) {
       return "Selected";
+    }
+    if (selectedTime.time!=null && time.time === selectedTime.time.time) {
+      return "Unavailable";
     }
     if (selectedTime.time!=null) {
       if (time.interviewer_id == selectedTime.time.interviewer_id) {

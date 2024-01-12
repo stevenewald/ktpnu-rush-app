@@ -104,7 +104,7 @@ exports.reserveGITime = functions.https.onCall(async (data, context) => {
     selected_gi_timeslot:
       "Your group interview timeslot is at Tech M345 from " +
       sheet.getCell(data.i, 0).value +
-      " on Wednesday, April 5th.",
+      " on Thursday, January 11th.",
   });
   return true;
 });

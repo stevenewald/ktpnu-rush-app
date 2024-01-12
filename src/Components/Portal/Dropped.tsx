@@ -23,6 +23,16 @@ export default function Dropped() {
             “elevator pitch” and reapply during the next rush cycle in the
             spring!
           </p>
+          <p className="mt-6 text-md leading-8 text-gray-500">
+            If you would like feedback on your performance, please fill out{" "}
+            <a
+              className="mt-6 text-md leading-8 text-gray-600 underline"
+              href="https://forms.gle/49EvwqL5qB44Tu7j9"
+              target="_blank"
+            >
+              this form
+            </a>
+          </p>
         </div>
       </div>
     </>

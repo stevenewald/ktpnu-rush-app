@@ -9,6 +9,9 @@ const { GoogleSpreadsheet } = require("google-spreadsheet");
 const cc_signup_doc = new GoogleSpreadsheet(
   functions.config().gdoc_ids.cc,
 );
+const social_signup_doc = new GoogleSpreadsheet(
+  functions.config().gdoc_ids.social,
+);
 const gi_signup_doc = new GoogleSpreadsheet(
   functions.config().gdoc_ids.gi,
 );
@@ -32,33 +35,30 @@ exports.reserveCCTime = functions.https.onCall(async (data, context) => {
   await cc_signup_doc.useServiceAccountAuth(creds);
   await cc_signup_doc.loadInfo();
   const sheet = cc_signup_doc.sheetsByIndex[0];
-  await sheet.loadCells("A8:K83");
-  const toReserve1 = sheet.getCell(data.i1, data.j1);
-  const toReserve2 = sheet.getCell(data.i2, data.j2);
-  if (toReserve1.value || toReserve2.value) {
-    console.log("Time already reserved!");
+  await sheet.loadCells("A6:J26");
+  const reserve_row = data.i;
+  var reserve_col = 5;
+  while (reserve_col < 10) {
+    if (!sheet.getCell(reserve_row, reserve_col).value) {
+      break;
+    }
+    reserve_col++;
+  }
+  if (reserve_col == 10) {
+    console.log("No spots!");
     return false;
   } else {
-    toReserve1.value = data.name + " (" + data.phone + ")";
-    toReserve2.value = data.name + " (" + data.phone + ")";
+    sheet.getCell(reserve_row, reserve_col).value = data.name + " (" +
+      data.phone + ")";
     await sheet.saveUpdatedCells();
     rush_users.child(context.auth.uid).update({
       selected_cc_timeslot: "Your first meeting is with " +
-        sheet.getCell(data.i1, data.j1 - 2).value +
+        sheet.getCell(data.i, 2).value + (sheet.getCell(data.i, 3).value ? (" and " + sheet.getCell(data.i, 3).value) : "") +
         " at " +
-        sheet.getCell(data.i1, data.j1 - 1).value +
+        sheet.getCell(data.i, 4).value +
         ". The timeslot is " +
-        sheet.getCell(data.i1, 0).value +
-        " on " +
-        sheet.getCell(data.i1, 1).value +
-        ". Your second meeting is with " +
-        sheet.getCell(data.i2, data.j2 - 2).value +
-        " at " +
-        sheet.getCell(data.i2, data.j2 - 1).value +
-        ". The timeslot is " +
-        sheet.getCell(data.i2, 0).value +
-        " on " +
-        sheet.getCell(data.i2, 1).value,
+        sheet.getCell(data.i, 0).value +
+        " on April 2nd."
     });
     return true;
   }
@@ -114,32 +114,29 @@ exports.getCCTimes = functions.https.onCall(async (data, context) => {
   await cc_signup_doc.useServiceAccountAuth(creds);
   await cc_signup_doc.loadInfo();
   const sheet = cc_signup_doc.sheetsByIndex[0];
-  await sheet.loadCells("A8:K83");
+  await sheet.loadCells("A6:J26");
 
-  const interviewer_ids = new Map();
-
-  for (var i = 7; i < 83; i += 1) {
+  for (var i = 5; i < 25; i += 1) {
     //i is the row
-    for (var j = 2; j < 11; j += 3) {
-      //j is the col
-      if (sheet.getCell(i, j).value && !sheet.getCell(i, j + 2).value) {
-        const interviewer = sheet.getCell(i, j).value;
-        if (!interviewer_ids.has(interviewer)) {
-          interviewer_ids.set(interviewer, interviewer_ids.size);
+    const interviewer1 = sheet.getCell(i, 2).value;
+    const interviewer2 = sheet.getCell(i, 3).value;
+    if (interviewer1 || interviewer2) {
+      var has_spot = false;
+      for (var j = 5; j < 10; j++) {
+        if (!sheet.getCell(i, j).value) {
+          has_spot = true;
         }
-        const interviewer_id = interviewer_ids.get(interviewer);
-
-        times.push({
-          time: sheet.getCell(i, 0).value,
-          location: sheet.getCell(i, j + 1).value,
-          date: sheet.getCell(i, 1).value,
-          // interviewer id allows us to prevent double booking the same interviewer
-          // without revealing their identity to the client
-          interviewer_id: interviewer_id,
-          i: i,
-          j: j + 2,
-        });
       }
+      if (!has_spot) {
+        continue;
+      }
+      times.push({
+        time: sheet.getCell(i, 0).value,
+        location: sheet.getCell(i, 4).value,
+        date: "April 2nd",
+        i: i,
+        j: 0,
+      });
     }
   }
   return times;
@@ -170,10 +167,17 @@ exports.reserveIndivTime = functions.https.onCall(async (data, context) => {
 
 exports.getIndivTimes = functions.https.onCall(async (data, context) => {
   csInterviewers = {
-    "Steve": null,
-    "Alexis": null,
-    "Akash": null,
-    "Eagan": null,
+    "Dhruv Saoji (408-455-0336)": null,
+    "Iris Ely (847-306-2213)": null,
+    "Nick Perry (973-710-6622)": null,
+    "Josh Prunty 4403713543": null,
+    "Eagan Notokusumo (331-304-8434)": null,
+    "Alex Shen (630-853-6680)": null,
+    "Tahira Grewal (224-382-3764)": null,
+    "Ben Gutstein (973-738-2713)": null,
+    "Lainey (914) 413-3732": null,
+    "Samar Saleem (516-669-4433)": null,
+    "Vikram Srikishan (609-665-7709)": null,
   };
   times = [];
   await indiv_signup_doc.useServiceAccountAuth(creds);
@@ -190,8 +194,9 @@ exports.getIndivTimes = functions.https.onCall(async (data, context) => {
     for (var j = 4; j < 21; j += 4) {
       //j is the col
       if (
-        sheet.getCell(i, j).value && sheet.getCell(i, j - 1).value &&
-        sheet.getCell(i, j - 2).value && !sheet.getCell(i, j - 3).value
+        sheet.getCell(i, j).value && (sheet.getCell(i, j - 1).value ||
+          sheet.getCell(i, j - 2).value) &&
+        !sheet.getCell(i, j - 3).value
       ) {
         if (
           data.cs &&
@@ -205,8 +210,7 @@ exports.getIndivTimes = functions.https.onCall(async (data, context) => {
             j: j - 3,
           });
         } else if (
-          !data.cs && !(sheet.getCell(i, j - 1).value in csInterviewers) &&
-          !(sheet.getCell(i, j - 2).value in csInterviewers)
+          !data.cs
         ) {
           times.push({
             time: sheet.getCell(i, 0).value,

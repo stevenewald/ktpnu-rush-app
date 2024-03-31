@@ -1,4 +1,4 @@
-import CCTimeSelections from "@portal/CCTimeSelections";
+import TimeSelections from "@portal/TimeSelections";
 import { useContext, useEffect, useState } from "react";
 import { FirebaseContext } from "@framework/FirebaseContext";
 
@@ -10,7 +10,6 @@ export default function CoffeeChatContent(props: { userDBEntry: ProfileType }) {
       time: string;
       location: string;
       date: string;
-      interviewer_id: number;
       i: number;
       j: number;
     }[],
@@ -81,7 +80,7 @@ export default function CoffeeChatContent(props: { userDBEntry: ProfileType }) {
       </div>
       {Object.keys(times).length > 0 &&
         !props.userDBEntry?.selected_cc_timeslot && (
-        <CCTimeSelections
+        <TimeSelections
           times={times}
           userDBEntry={props.userDBEntry}
           selectMethod={"coffee_chats"}

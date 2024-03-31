@@ -53,8 +53,8 @@ export default function Congrats() {
                   Swal.fire({
                     icon: "success",
                     title: "Welcome to KTP!",
-                    text: "To confirm your bid, create an account on the member portal (your email has been added to the system). We look forward to seeing you soon!",
-                    confirmButtonText: "Continue to Portal",
+                    text: "To confirm your bid, create an account on the member portal. You will be emailed instructions within the next 24 hours.",
+                      showConfirmButton: false,
                   }).then(() => {
                     window.location.href = "https://ktpnu.com/signup";
                   });

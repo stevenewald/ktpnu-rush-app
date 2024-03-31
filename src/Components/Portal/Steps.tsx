@@ -5,7 +5,7 @@ const steps_default = [
   { id: "01", name: "Application", href: "#", status: "upcoming" },
   { id: "02", name: "Networking Night", href: "#", status: "upcoming" },
   { id: "03", name: "Coffee Chats", href: "#", status: "upcoming" },
-  { id: "04", name: "Group Interviews", href: "#", status: "upcoming" },
+  { id: "04", name: "Social / Group", href: "#", status: "upcoming" },
   { id: "05", name: "Individual Interviews", href: "#", status: "upcoming" },
 ];
 

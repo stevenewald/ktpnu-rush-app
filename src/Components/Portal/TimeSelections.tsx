@@ -82,7 +82,6 @@ export default function TimeSelections(props: {
                                       .functions()
                                       .httpsCallable("reserveCCTime")({
                                         i: time.i,
-                                        j: time.j,
                                         name: props.userDBEntry.fullName,
                                         phone: res.value,
                                       })

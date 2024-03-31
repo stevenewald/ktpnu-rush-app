@@ -6,7 +6,7 @@
       "$user_id": {
         ".read": "$user_id===auth.uid",
         "$child":{
-          ".write": "$user_id===auth.uid && ($child !== 'stage') && ($child !== 'dropped') && ($child !== 'flagged') && ($child !== 'readonly') && now < 1704861071000"
+          ".write": "$user_id===auth.uid && ($child !== 'stage') && ($child !== 'dropped') && ($child !== 'flagged') && ($child !== 'readonly')"
         }
       }
     }

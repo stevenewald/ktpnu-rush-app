@@ -21,6 +21,7 @@ const indiv_signup_doc = new GoogleSpreadsheet(
 
 const creds = require("./creds.json");
 const nodemailer = require("nodemailer");
+const { group } = require("console");
 
 let transporter = nodemailer.createTransport({
   host: "smtp-relay.sendinblue.com",
@@ -38,13 +39,13 @@ exports.reserveCCTime = functions.https.onCall(async (data, context) => {
   await sheet.loadCells("A6:J26");
   const reserve_row = data.i;
   var reserve_col = 5;
-  while (reserve_col < 10) {
+  while (reserve_col < 9) {
     if (!sheet.getCell(reserve_row, reserve_col).value) {
       break;
     }
     reserve_col++;
   }
-  if (reserve_col == 10) {
+  if (reserve_col == 9) {
     console.log("No spots!");
     return false;
   } else {
@@ -53,22 +54,25 @@ exports.reserveCCTime = functions.https.onCall(async (data, context) => {
     await sheet.saveUpdatedCells();
     rush_users.child(context.auth.uid).update({
       selected_cc_timeslot: "Your first meeting is with " +
-        sheet.getCell(data.i, 2).value + (sheet.getCell(data.i, 3).value ? (" and " + sheet.getCell(data.i, 3).value) : "") +
+        sheet.getCell(data.i, 2).value + (sheet.getCell(data.i, 3).value
+          ? (" and " + sheet.getCell(data.i, 3).value)
+          : "") +
         " at " +
         sheet.getCell(data.i, 4).value +
         ". The timeslot is " +
         sheet.getCell(data.i, 0).value +
-        " on April 2nd."
+        " on April 2nd.",
     });
     return true;
   }
 });
 
 exports.reserveGITime = functions.https.onCall(async (data, context) => {
-  await gi_signup_doc.useServiceAccountAuth(creds);
-  await gi_signup_doc.loadInfo();
-  const sheet = gi_signup_doc.sheetsByIndex[0];
-  await sheet.loadCells("A2:L5");
+  const doc = data.type=="social" ? social_signup_doc : gi_signup_doc;
+  await doc.useServiceAccountAuth(creds);
+  await doc.loadInfo();
+  const sheet = doc.sheetsByIndex[0];
+  await sheet.loadCells("A2:AF3");
   var numTimeSignups = sheet.getCell(data.i, 1).value;
   var reserveCol = numTimeSignups + 2;
   console.log(
@@ -80,7 +84,7 @@ exports.reserveGITime = functions.https.onCall(async (data, context) => {
     );
     reserveCol = 0;
     numTimeSignups = 0;
-    for (var j = 2; j < 12; j++) {
+    for (var j = 2; j < 32; j++) {
       if (!sheet.getCell(data.i, j).value) {
         reserveCol = j;
         break;
@@ -90,7 +94,7 @@ exports.reserveGITime = functions.https.onCall(async (data, context) => {
     }
     if (!reserveCol) {
       console.log("Can't reserve time!");
-      sheet.getCell(data.i, 1).value = 10;
+      sheet.getCell(data.i, 1).value = 30;
       await sheet.saveUpdatedCells();
       return false;
     }
@@ -100,12 +104,19 @@ exports.reserveGITime = functions.https.onCall(async (data, context) => {
   sheet.getCell(data.i, reserveCol).value = data.name;
   sheet.getCell(data.i, 1).value = numTimeSignups + 1;
   await sheet.saveUpdatedCells();
+  if(data.type=="group"){
   rush_users.child(context.auth.uid).update({
     selected_gi_timeslot:
       "Your group interview timeslot is at Tech M345 from " +
       sheet.getCell(data.i, 0).value +
-      " on Thursday, January 11th.",
-  });
+      " on Thursday, April 4th.",
+  })} else {
+  rush_users.child(context.auth.uid).update({
+    selected_social_timeslot:
+      "Your social interview timeslot is at Tech F281 from " +
+      sheet.getCell(data.i, 0).value +
+      " on Wednesday, April 3rd.",})
+  }
   return true;
 });
 
@@ -122,7 +133,7 @@ exports.getCCTimes = functions.https.onCall(async (data, context) => {
     const interviewer2 = sheet.getCell(i, 3).value;
     if (interviewer1 || interviewer2) {
       var has_spot = false;
-      for (var j = 5; j < 10; j++) {
+      for (var j = 5; j < 9; j++) {
         if (!sheet.getCell(i, j).value) {
           has_spot = true;
         }
@@ -225,27 +236,30 @@ exports.getIndivTimes = functions.https.onCall(async (data, context) => {
   return times;
 });
 
+// this is terribly designed bc im lazy
 exports.getGITimes = functions.https.onCall(async (data, context) => {
   times = [];
-  await gi_signup_doc.useServiceAccountAuth(creds);
-  await gi_signup_doc.loadInfo();
-  const sheet = gi_signup_doc.sheetsByIndex[0];
-  await sheet.loadCells("A2:B5");
-  for (var i = 1; i < 5; i += 1) {
+  const doc = data.type=="social" ? social_signup_doc : gi_signup_doc;
+  await doc.useServiceAccountAuth(creds);
+  await doc.loadInfo();
+  const sheet = doc.sheetsByIndex[0];
+  await sheet.loadCells("A2:B3");
+  for (var i = 1; i < 3; i += 1) {
     //i is the row
     //j is the col
     if (
       !isNaN(sheet.getCell(i, 1).value) &&
-      parseFloat(sheet.getCell(i, 1).value) < 10
+      parseFloat(sheet.getCell(i, 1).value) < 30
     ) {
       times.push({
         time: sheet.getCell(i, 0).value,
         i: i,
         j: -1,
-        location: "Tech M345",
+        location: data.type=="social" ? "Tech F281" : "Tech M345",
       });
     }
   }
+  console.log(times.length);
   return times;
 });
 

@@ -53,7 +53,7 @@ export default function CoffeeChatContent(props: { userDBEntry: ProfileType }) {
                 get to know us! As such, the dress code is casual.
               </p>
               <p className="mt-6 text-lg leading-8 text-gray-600">
-                Please select two timeslots for your coffee chats below.
+                Please select a timeslot for your coffee chat below.
               </p>
             </div>
           )}
@@ -84,6 +84,7 @@ export default function CoffeeChatContent(props: { userDBEntry: ProfileType }) {
           times={times}
           userDBEntry={props.userDBEntry}
           selectMethod={"coffee_chats"}
+            name="Coffee Chat times"
         />
       )}
     </div>

@@ -17,6 +17,7 @@ declare type ProfileType = {
   ResumeURL?: string;
   completed_application?: boolean;
   selected_cc_timeslot?: boolean;
+  selected_social_timeslot?: boolean;
   selected_gi_timeslot?: boolean;
   admin?: boolean;
   readonly?: boolean;

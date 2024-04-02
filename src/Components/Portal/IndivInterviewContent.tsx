@@ -48,7 +48,7 @@ export default function IndivInterviewContent(props:{userDBEntry:ProfileType}) {
       </div>
       {Object.keys(times).length > 0 &&
         !props.userDBEntry?.selected_indiv_timeslot && (
-          <TimeSelections times={times} userDBEntry={props.userDBEntry} selectMethod={"indiv_interviews"}/>
+          <TimeSelections times={times} userDBEntry={props.userDBEntry} selectMethod={"indiv_interviews"} name={"Individual Interviews"}/>
         )}
     </div>
   );

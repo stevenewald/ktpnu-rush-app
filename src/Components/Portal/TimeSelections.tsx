@@ -5,6 +5,7 @@ export default function TimeSelections(props: {
   times: { time: string; location: string; i: number; j: number }[];
   userDBEntry: ProfileType;
   selectMethod: string;
+  name: string;
 }) {
   const firebase = useContext(FirebaseContext).firebase;
   return (
@@ -15,6 +16,18 @@ export default function TimeSelections(props: {
             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
               <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
                 <table className="min-w-full divide-y divide-gray-300">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th></th>
+                      <th
+                        scope="col"
+                        className="py-3.5 font-semibold text-gray-900 text-center"
+                      >
+                        {props.name}
+                      </th>
+                      <th></th>
+                    </tr>
+                  </thead>
                   <thead className="bg-gray-50">
                     <tr>
                       <th
@@ -32,7 +45,8 @@ export default function TimeSelections(props: {
                       <th
                         scope="col"
                         className="px-10 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      ></th>
+                      >
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
@@ -48,33 +62,40 @@ export default function TimeSelections(props: {
                           <button
                             type="button"
                             onClick={() => {
-                              const coffeeOptions:any = {
+                              const coffeeOptions: any = {
                                 icon: "info",
                                 title:
                                   "Are you sure you want to select this time slot?",
-                                text: "You will not be able to change this time slot after you select it. Enter your phone number to confirm your selection.",
+                                text:
+                                  "You will not be able to change this time slot after you select it. Enter your phone number to confirm your selection.",
                                 input: "text",
                                 showCancelButton: true,
                               };
-                              const groupOptions:any = {
+                              const groupOptions: any = {
                                 icon: "info",
                                 title:
                                   "Are you sure you want to select this time slot?",
-                                text: "You will not be able to change this time slot after you select it.",
+                                text:
+                                  "You will not be able to change this time slot after you select it.",
                                 showCancelButton: true,
                               };
-                              Swal.fire(props.selectMethod==="group_interviews" ? groupOptions : coffeeOptions).then((res) => {
+                              Swal.fire(
+                                props.selectMethod === "coffee_chats"
+                                  ? coffeeOptions
+                                  : groupOptions
+                              ).then((res) => {
                                 if (res.isConfirmed) {
                                   Swal.fire({
                                     icon: "info",
-                                    text: "Please wait while your timeslot is reserved...",
+                                    text:
+                                      "Please wait while your timeslot is reserved...",
                                     allowOutsideClick: false,
                                     allowEscapeKey: false,
                                     allowEnterKey: false,
                                   });
                                   Swal.showLoading();
                                   if (props.selectMethod === "coffee_chats") {
-                                    if(res.value.length==0) {
+                                    if (res.value.length == 0) {
                                       Swal.close();
                                       return;
                                     }
@@ -91,18 +112,22 @@ export default function TimeSelections(props: {
                                         } else {
                                           Swal.fire({
                                             icon: "error",
-                                            text: "This time slot is no longer available. Please refresh the page and try again.",
+                                            text:
+                                              "This time slot is no longer available. Please refresh the page and try again.",
                                           }).then(() => {
                                             window.location.reload();
                                           });
                                         }
                                       });
-                                  } else if(props.selectMethod==="group_interviews") {
+                                  } else if (
+                                    props.selectMethod === "group_interviews"
+                                  ) {
                                     firebase
                                       .functions()
                                       .httpsCallable("reserveGITime")({
                                         i: time.i,
                                         name: props.userDBEntry.fullName,
+                                          type:"group"
                                       })
                                       .then((res: any) => {
                                         if (res.data) {
@@ -110,14 +135,38 @@ export default function TimeSelections(props: {
                                         } else {
                                           Swal.fire({
                                             icon: "error",
-                                            text: "This time slot is no longer available. Please refresh the page and try again.",
+                                            text:
+                                              "This time slot is no longer available. Please refresh the page and try again.",
+                                          }).then(() => {
+                                            window.location.reload();
+                                          });
+                                        }
+                                      });
+                                  } else if (
+                                    props.selectMethod === "social_interviews"
+                                  ) {
+                                    firebase
+                                      .functions()
+                                      .httpsCallable("reserveGITime")({
+                                        i: time.i,
+                                        name: props.userDBEntry.fullName,
+                                          type:"social"
+                                      })
+                                      .then((res: any) => {
+                                        if (res.data) {
+                                          window.location.reload();
+                                        } else {
+                                          Swal.fire({
+                                            icon: "error",
+                                            text:
+                                              "This time slot is no longer available. Please refresh the page and try again.",
                                           }).then(() => {
                                             window.location.reload();
                                           });
                                         }
                                       });
                                   } else {
-                                    if(res.value.length==0) {
+                                    if (res.value.length == 0) {
                                       Swal.close();
                                       return;
                                     }
@@ -135,7 +184,8 @@ export default function TimeSelections(props: {
                                         } else {
                                           Swal.fire({
                                             icon: "error",
-                                            text: "This time slot is no longer available. Please refresh the page and try again.",
+                                            text:
+                                              "This time slot is no longer available. Please refresh the page and try again.",
                                           }).then(() => {
                                             window.location.reload();
                                           });

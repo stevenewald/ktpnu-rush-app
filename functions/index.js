@@ -94,7 +94,7 @@ exports.reserveGITime = functions.https.onCall(async (data, context) => {
     }
     if (!reserveCol) {
       console.log("Can't reserve time!");
-      sheet.getCell(data.i, 1).value = 30;
+      sheet.getCell(data.i, 1).value = 25;
       await sheet.saveUpdatedCells();
       return false;
     }
@@ -178,17 +178,22 @@ exports.reserveIndivTime = functions.https.onCall(async (data, context) => {
 
 exports.getIndivTimes = functions.https.onCall(async (data, context) => {
   csInterviewers = {
-    "Dhruv Saoji (408-455-0336)": null,
-    "Iris Ely (847-306-2213)": null,
-    "Nick Perry (973-710-6622)": null,
-    "Josh Prunty 4403713543": null,
-    "Eagan Notokusumo (331-304-8434)": null,
-    "Alex Shen (630-853-6680)": null,
-    "Tahira Grewal (224-382-3764)": null,
-    "Ben Gutstein (973-738-2713)": null,
-    "Lainey (914) 413-3732": null,
-    "Samar Saleem (516-669-4433)": null,
-    "Vikram Srikishan (609-665-7709)": null,
+    "Eagan Notokusumo (331-304-8434)":null,
+    "Samar Saleem (516-669-4433)":null,
+    "Samar Saleem (5166694433)":null,
+    "Mia Scarpati (2036353681)":null,
+    "Sneh Deshpande (847-219-3960)":null,
+    "Lainey Neild (9144133732)":null,
+    "Damien Koh":null,
+    "Nicole Liu(408-768-9300)":null,
+    "Jaimie Hong":null,
+    "Kat Cui (832-614-6175)":null,
+    "Dhruv Saoji 408-455-0336":null,
+    "Iris Ely (847-306-2213)":null,
+    "Ford Holmen (347-224-5896)":null,
+    "Andy Vu (308-224-7967)":null,
+    "Tahira Grewal (224-382-3764)":null,
+    "AnnaRose Jones (9182600029)":null
   };
   times = [];
   await indiv_signup_doc.useServiceAccountAuth(creds);
@@ -200,7 +205,7 @@ exports.getIndivTimes = functions.https.onCall(async (data, context) => {
   } else {
     console.log("Requesting non cs times");
   }
-  for (var i = 2; i < 14; i += 1) {
+  for (var i = 2; i < 13; i += 1) {
     //i is the row
     for (var j = 4; j < 21; j += 4) {
       //j is the col
@@ -249,7 +254,7 @@ exports.getGITimes = functions.https.onCall(async (data, context) => {
     //j is the col
     if (
       !isNaN(sheet.getCell(i, 1).value) &&
-      parseFloat(sheet.getCell(i, 1).value) < 30
+      parseFloat(sheet.getCell(i, 1).value) < 25
     ) {
       times.push({
         time: sheet.getCell(i, 0).value,

@@ -40,12 +40,14 @@ export default function GroupInterviewContent(
           <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
             Congrats, you moved on to social and group interviews!
           </h2>
-          {(!props.userDBEntry?.selected_gi_timeslot || !props.userDBEntry?.selected_social_timeslot) && (
+          {(!props.userDBEntry?.selected_gi_timeslot ||
+            !props.userDBEntry?.selected_social_timeslot) && (
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              Group interviews will take place in Tech M345. You'll have the
-              opportunity to meet many KTP members, learn more about our
-              organization, and hopefully move on to the next round. The dress
-              code is business casual.
+              Group interviews for KTP will be in Tech M345, where you'll
+              collaborate with other applicants on challenging problems. Socials
+              are in Tech F281, offering a chance to meet many members and learn
+              more about the organization. Dress code is business casual for
+              both events.
             </p>
           )}
           {(!props.userDBEntry?.selected_gi_timeslot) &&
@@ -54,24 +56,28 @@ export default function GroupInterviewContent(
               Loading available timeslots...
             </p>
           )}
-          {(!props.userDBEntry?.selected_social_timeslot && props.userDBEntry.selected_gi_timeslot) &&
+          {(!props.userDBEntry?.selected_social_timeslot &&
+            props.userDBEntry.selected_gi_timeslot) &&
             Object.keys(socialTimes).length == 0 && (
             <p className="mt-6 text-lg leading-8 text-gray-600">
               Loading available timeslots...
             </p>
           )}
-          {(props.userDBEntry?.selected_gi_timeslot && props.userDBEntry?.selected_social_timeslot) && (
+          {(props.userDBEntry?.selected_gi_timeslot &&
+            props.userDBEntry?.selected_social_timeslot) && (
             <>
               <p className="mt-6 text-lg leading-8 text-gray-600">
-                {props.userDBEntry.selected_social_timeslot}<br></br>
-                {props.userDBEntry.selected_gi_timeslot}<br></br>
+                {props.userDBEntry.selected_social_timeslot}
+                <br></br>
+                {props.userDBEntry.selected_gi_timeslot}
+                <br></br>
                 Please dress business casual.
               </p>
             </>
           )}
         </div>
       </div>
-      <div className="flex text-center mt-8">
+      <div className="flex text-center mt-6">
         {Object.keys(socialTimes).length > 0 &&
           !props.userDBEntry?.selected_social_timeslot && (
           <TimeSelections

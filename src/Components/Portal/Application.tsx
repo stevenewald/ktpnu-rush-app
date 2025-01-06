@@ -47,7 +47,7 @@ export default function Application(props: {
   }, props.user);
 
   useEffect(() => {
-    if (new Date() > new Date(2025, 0, 12, 23, 59) && !props.readonly) {
+    if (new Date() > new Date(2025, 0, 13, 19) && !props.readonly) {
       Swal.fire({
         icon: "error",
         title: "Applications are closed!",
@@ -248,8 +248,8 @@ export default function Application(props: {
                     </h1>
                     <br></br>
                     <h1 className="font-bold">
-                      To join KTP for Spring Rush 2024, complete the application
-                      below by 7:30pm on Monday, April 1st. Contact
+                      To join KTP for Winter Rush 2025, complete the application
+                      below by 7:00 pm on Monday, January 13th. Contact
                       help@ktpnu.com with any questions.
                     </h1>
                   </div>

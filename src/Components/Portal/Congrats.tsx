@@ -61,7 +61,7 @@ export default function Congrats() {
                 } else {
                   Swal.fire({
                     title: "We understand",
-                    html: "We know that this is a big decision, and we are happy to give you time to think about it.<br><br>Please reach out to us if you have any questions or concerns. Let us know by 2pm on Saturday with your decision at rush@ktpnu.com.<br><br>We hope you'll join us for our next pledge class, and if not, thank you for joining us for winter rush 2024! We hope you enjoyed it as much as we did.",
+                    html: "We know that this is a big decision, and we are happy to give you time to think about it.<br><br>Please reach out to us if you have any questions or concerns. Let us know by 2pm on Saturday with your decision at rush@ktpnu.com.<br><br>We hope you'll join us for our next pledge class, and if not, thank you for joining us for winter 2025 rush! We hope you enjoyed it as much as we did.",
                     confirmButtonText: "I'll let you know soon!",
                   }).then(() => {
                     window.location.href = "https://ktpnu.com";

@@ -7,8 +7,8 @@ export default function NetworkingNightContent() {
             Join us for Networking Night
           </h2>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            Our first rush event takes place at 8:00pm on April 1st (Tech
-            LR3). You'll have the opportunity to meet many KTP members, learn
+            Our first rush event takes place at 7:00pm on January 13th (Tech
+            L211). You'll have the opportunity to meet many KTP members, learn
             more about our organization, and hopefully move on to the next
             round. The dress code is business casual.
           </p>

@@ -178,23 +178,19 @@ exports.reserveIndivTime = functions.https.onCall(async (data, context) => {
 
 exports.getIndivTimes = functions.https.onCall(async (data, context) => {
   csInterviewers = {
-    "Eagan Notokusumo (331-304-8434)":null,
-    "Samar Saleem (516-669-4433)":null,
-    "Samar Saleem (5166694433)":null,
-    "Mia Scarpati (2036353681)":null,
-    "Sneh Deshpande (847-219-3960)":null,
-    "Lainey Neild (9144133732)":null,
-    "Damien Koh":null,
-    "Nicole Liu(408-768-9300)":null,
-    "Jaimie Hong":null,
-    "Kat Cui (832-614-6175)":null,
-    "Dhruv Saoji 408-455-0336":null,
-    "Iris Ely (847-306-2213)":null,
-    "Ford Holmen (347-224-5896)":null,
-    "Andy Vu (308-224-7967)":null,
-    "Tahira Grewal (224-382-3764)":null,
-    "AnnaRose Jones (9182600029)":null
+    "Samar":null,
+    "Steve":null,
+    "Rohan Badani":null,
+    "Nicole Liu":null,
+    "John Hileman":null,
+    "Caroline Guerra":null,
+    "Dhruv Saoji":null,
+    "Clara Asseily":null,
+    "Zacaria Nouri":null,
+    "Caleb":null,
+    "Alexis Robles":null
   };
+
   times = [];
   await indiv_signup_doc.useServiceAccountAuth(creds);
   await indiv_signup_doc.loadInfo();

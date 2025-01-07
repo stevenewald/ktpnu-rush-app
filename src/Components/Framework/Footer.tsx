@@ -82,7 +82,7 @@ export default function Footer() {
         </div>
         <div className="mt-8 lg:order-1 lg:mt-0">
           <p className="text-center text-base text-gray-700">
-            &copy; 2024 Kappa Theta Pi Kappa Chapter. All Rights Reserved.
+            &copy; 2025 Kappa Theta Pi Kappa Chapter. All Rights Reserved.
           </p>
         </div>
         <div className="lg:order-2 lg:mt-0 mt-8">

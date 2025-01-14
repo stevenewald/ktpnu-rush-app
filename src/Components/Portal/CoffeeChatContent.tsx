@@ -67,7 +67,7 @@ export default function CoffeeChatContent(props: { userDBEntry: ProfileType }) {
             <>
               <p className="mt-6 text-lg leading-8 text-gray-600">
                 {props.userDBEntry.selected_cc_timeslot}{" "}
-                Please dress business casual.
+                Please dress casual.
               </p>
               <p className="mt-6 text-lg leading-8 text-gray-600">
                 If you cannot find your interviewer, reach out via phone. If you

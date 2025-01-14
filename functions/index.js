@@ -61,7 +61,7 @@ exports.reserveCCTime = functions.https.onCall(async (data, context) => {
         sheet.getCell(data.i, 4).value +
         ". The timeslot is " +
         sheet.getCell(data.i, 0).value +
-        " on April 2nd.",
+        " on January 14th.",
     });
     return true;
   }
@@ -109,13 +109,13 @@ exports.reserveGITime = functions.https.onCall(async (data, context) => {
     selected_gi_timeslot:
       "Your group interview timeslot is at Tech M345 from " +
       sheet.getCell(data.i, 0).value +
-      " on Thursday, April 4th.",
+      " on Thursday, January 16th.",
   })} else {
   rush_users.child(context.auth.uid).update({
     selected_social_timeslot:
       "Your social interview timeslot is at Tech F281 from " +
       sheet.getCell(data.i, 0).value +
-      " on Wednesday, April 3rd.",})
+      " on Wednesday, January 15th.",})
   }
   return true;
 });
@@ -144,7 +144,7 @@ exports.getCCTimes = functions.https.onCall(async (data, context) => {
       times.push({
         time: sheet.getCell(i, 0).value,
         location: sheet.getCell(i, 4).value,
-        date: "April 2nd",
+        date: "January 14th",
         i: i,
         j: 0,
       });
@@ -188,7 +188,17 @@ exports.getIndivTimes = functions.https.onCall(async (data, context) => {
     "Clara Asseily":null,
     "Zacaria Nouri":null,
     "Caleb":null,
-    "Alexis Robles":null
+    "Alexis Robles":null,
+    "Eagan":null,
+    "Kat Cui": null,
+    "Dhruv Saoji": null,
+    "Iris Ely": null,
+    "Samar, Aaron": null,
+    "Louis Chavey": null,
+    "Alyssa": null,
+    "Chloe Lu": null,
+    "Alex Shen": null,
+    "Josh Prunty": null
   };
 
   times = [];

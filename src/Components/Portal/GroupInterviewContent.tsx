@@ -44,10 +44,10 @@ export default function GroupInterviewContent(
             !props.userDBEntry?.selected_social_timeslot) && (
             <p className="mt-6 text-lg leading-8 text-gray-600">
               Group interviews for KTP will be in Tech M345, where you'll
-              collaborate with other applicants on challenging problems. Socials
-              are in Tech F281, offering a chance to meet many members and learn
-              more about the organization. Dress code is business casual for
-              both events.
+              collaborate with other applicants on challenging problems. Please bring a laptop to 
+              group interviews. Socials are in Tech F281, offering a chance to meet 
+              many members and learn more about the organization. Dress code is 
+              business casual for both events.
             </p>
           )}
           {(!props.userDBEntry?.selected_gi_timeslot) &&

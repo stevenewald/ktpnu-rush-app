@@ -36,7 +36,7 @@ exports.reserveCCTime = functions.https.onCall(async (data, context) => {
   await cc_signup_doc.useServiceAccountAuth(creds);
   await cc_signup_doc.loadInfo();
   const sheet = cc_signup_doc.sheetsByIndex[0];
-  await sheet.loadCells("A6:J26");
+  await sheet.loadCells("A6:K26");
   const reserve_row = data.i;
   var reserve_col = 5;
   while (reserve_col < 9) {
@@ -113,7 +113,7 @@ exports.reserveGITime = functions.https.onCall(async (data, context) => {
   })} else {
   rush_users.child(context.auth.uid).update({
     selected_social_timeslot:
-      "Your social interview timeslot is at Tech F281 from " +
+      "Your social night timeslot is at Tech F281 from " +
       sheet.getCell(data.i, 0).value +
       " on Wednesday, January 15th.",})
   }
@@ -178,27 +178,25 @@ exports.reserveIndivTime = functions.https.onCall(async (data, context) => {
 
 exports.getIndivTimes = functions.https.onCall(async (data, context) => {
   csInterviewers = {
-    "Samar":null,
-    "Steve":null,
-    "Rohan Badani":null,
-    "Nicole Liu":null,
-    "John Hileman":null,
-    "Caroline Guerra":null,
-    "Dhruv Saoji":null,
-    "Clara Asseily":null,
-    "Zacaria Nouri":null,
-    "Caleb":null,
-    "Alexis Robles":null,
-    "Eagan":null,
-    "Kat Cui": null,
-    "Dhruv Saoji": null,
-    "Iris Ely": null,
-    "Samar, Aaron": null,
-    "Louis Chavey": null,
-    "Alyssa": null,
-    "Chloe Lu": null,
-    "Alex Shen": null,
-    "Josh Prunty": null
+    "Samar Saleem 516-669-4433":null,
+    "Steve Ewald 781-800-4140":null,
+    "Rohan Badani 617-909-8536":null,
+    "Nicole Liu 408-768-9300":null,
+    "John Hileman 618-975-6183":null,
+    "Caroline Guerra 239-300-3076":null,
+    "Caleb Weldon 617-416-3646":null,
+    "Alexis Robles 781-666-9422":null,
+    "Eagan Notokusumo 331-304-8434":null,
+    "Dhruv Saoji 408-455-0336":null,
+    "Iris Ely 847-306-2213":null,
+    "Louis Chavey 650-686-1770":null,
+    "Alyssa Shou 925-858-0608":null,
+    "Chloe Lu 760-421-4932":null,
+    "Alex Shen 630-853-6680":null,
+    "Josh Prunty 440-371-3543":null,
+    "Olivia Li 630-935-8930":null,
+    "Joseph Shim 309-684-8021":null,
+    "Leilani Kulkarni 773-397-2062":null
   };
 
   times = [];

@@ -39,13 +39,13 @@ exports.reserveCCTime = functions.https.onCall(async (data, context) => {
   await sheet.loadCells("A6:K26");
   const reserve_row = data.i;
   var reserve_col = 5;
-  while (reserve_col < 9) {
+  while (reserve_col < 10) {
     if (!sheet.getCell(reserve_row, reserve_col).value) {
       break;
     }
     reserve_col++;
   }
-  if (reserve_col == 9) {
+  if (reserve_col == 10) {
     console.log("No spots!");
     return false;
   } else {
@@ -94,7 +94,7 @@ exports.reserveGITime = functions.https.onCall(async (data, context) => {
     }
     if (!reserveCol) {
       console.log("Can't reserve time!");
-      sheet.getCell(data.i, 1).value = 25;
+      sheet.getCell(data.i, 1).value = 30;
       await sheet.saveUpdatedCells();
       return false;
     }
@@ -125,7 +125,7 @@ exports.getCCTimes = functions.https.onCall(async (data, context) => {
   await cc_signup_doc.useServiceAccountAuth(creds);
   await cc_signup_doc.loadInfo();
   const sheet = cc_signup_doc.sheetsByIndex[0];
-  await sheet.loadCells("A6:J26");
+  await sheet.loadCells("A6:K26");
 
   for (var i = 5; i < 25; i += 1) {
     //i is the row
@@ -133,7 +133,7 @@ exports.getCCTimes = functions.https.onCall(async (data, context) => {
     const interviewer2 = sheet.getCell(i, 3).value;
     if (interviewer1 || interviewer2) {
       var has_spot = false;
-      for (var j = 5; j < 9; j++) {
+      for (var j = 5; j < 10; j++) {
         if (!sheet.getCell(i, j).value) {
           has_spot = true;
         }

@@ -94,7 +94,7 @@ exports.reserveGITime = functions.https.onCall(async (data, context) => {
     }
     if (!reserveCol) {
       console.log("Can't reserve time!");
-      sheet.getCell(data.i, 1).value = 25;
+      sheet.getCell(data.i, 1).value = 30;
       await sheet.saveUpdatedCells();
       return false;
     }
@@ -109,13 +109,13 @@ exports.reserveGITime = functions.https.onCall(async (data, context) => {
     selected_gi_timeslot:
       "Your group interview timeslot is at Tech M345 from " +
       sheet.getCell(data.i, 0).value +
-      " on Thursday, April 4th.",
+      " on Thursday, January 16th.",
   })} else {
   rush_users.child(context.auth.uid).update({
     selected_social_timeslot:
       "Your social interview timeslot is at Tech F281 from " +
       sheet.getCell(data.i, 0).value +
-      " on Wednesday, April 3rd.",})
+      " on Wednesday, January 15th.",})
   }
   return true;
 });
@@ -250,7 +250,7 @@ exports.getGITimes = functions.https.onCall(async (data, context) => {
     //j is the col
     if (
       !isNaN(sheet.getCell(i, 1).value) &&
-      parseFloat(sheet.getCell(i, 1).value) < 25
+      parseFloat(sheet.getCell(i, 1).value) < 30
     ) {
       times.push({
         time: sheet.getCell(i, 0).value,

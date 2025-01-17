@@ -14,7 +14,7 @@ export default function IndivInterviewContent(props:{userDBEntry:ProfileType}) {
       .then((res: any) => {
         setTimes(res.data);
         if(res.data.length==0) {
-          Swal.fire({icon:'error',title:'No more available timeslots',text:'Please contact Damien at 847-868-6251 or Alice at 650-645-0769 to let them know. Thank you!'})
+          Swal.fire({icon:'error',title:'No more available timeslots',text:'Please contact Caroline (239-300-3076) to let her know. Thank you!'})
         }
       });
   }, [props.userDBEntry]);

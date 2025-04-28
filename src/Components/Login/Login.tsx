@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import DamienPic from "@images/damien.jpg";
+import GroupPic from "@images/groupPC-min.jpg";
 import Logo from "@images/Logo.png";
 import { FirebaseContext } from "@framework/FirebaseContext";
 import Swal from "sweetalert2";
@@ -89,7 +89,7 @@ export default function Login() {
       <div className="relative hidden w-0 flex-1 lg:block">
         <img
           className="absolute inset-0 h-screen w-full object-cover"
-          src={DamienPic}
+          src={GroupPic}
           alt=""
         />
       </div>

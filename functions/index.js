@@ -1,5 +1,6 @@
-const functions = require("firebase-functions");
+const functions = require("firebase-functions/v1");
 const admin = require("firebase-admin");
+
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
   databaseURL: "https://rush-ktp-default-rtdb.firebaseio.com/",
@@ -36,16 +37,16 @@ exports.reserveCCTime = functions.https.onCall(async (data, context) => {
   await cc_signup_doc.useServiceAccountAuth(creds);
   await cc_signup_doc.loadInfo();
   const sheet = cc_signup_doc.sheetsByIndex[0];
-  await sheet.loadCells("A6:K26");
+  await sheet.loadCells("A6:I25");
   const reserve_row = data.i;
   var reserve_col = 5;
-  while (reserve_col < 10) {
+  while (reserve_col < 8) {
     if (!sheet.getCell(reserve_row, reserve_col).value) {
       break;
     }
     reserve_col++;
   }
-  if (reserve_col == 10) {
+  if (reserve_col == 8) {
     console.log("No spots!");
     return false;
   } else {
@@ -61,7 +62,7 @@ exports.reserveCCTime = functions.https.onCall(async (data, context) => {
         sheet.getCell(data.i, 4).value +
         ". The timeslot is " +
         sheet.getCell(data.i, 0).value +
-        " on January 14th.",
+        " on April 8th.",
     });
     return true;
   }
@@ -72,7 +73,7 @@ exports.reserveGITime = functions.https.onCall(async (data, context) => {
   await doc.useServiceAccountAuth(creds);
   await doc.loadInfo();
   const sheet = doc.sheetsByIndex[0];
-  await sheet.loadCells("A2:AF3");
+  await sheet.loadCells("A2:Z3");
   var numTimeSignups = sheet.getCell(data.i, 1).value;
   var reserveCol = numTimeSignups + 2;
   console.log(
@@ -84,7 +85,7 @@ exports.reserveGITime = functions.https.onCall(async (data, context) => {
     );
     reserveCol = 0;
     numTimeSignups = 0;
-    for (var j = 2; j < 32; j++) {
+    for (var j = 2; j < 25; j++) {
       if (!sheet.getCell(data.i, j).value) {
         reserveCol = j;
         break;
@@ -94,7 +95,7 @@ exports.reserveGITime = functions.https.onCall(async (data, context) => {
     }
     if (!reserveCol) {
       console.log("Can't reserve time!");
-      sheet.getCell(data.i, 1).value = 30;
+      sheet.getCell(data.i, 1).value = 23;
       await sheet.saveUpdatedCells();
       return false;
     }
@@ -109,23 +110,24 @@ exports.reserveGITime = functions.https.onCall(async (data, context) => {
     selected_gi_timeslot:
       "Your group interview timeslot is at Tech M345 from " +
       sheet.getCell(data.i, 0).value +
-      " on Thursday, January 16th.",
+      " on Thursday, April 10th.",
   })} else {
   rush_users.child(context.auth.uid).update({
     selected_social_timeslot:
       "Your social night timeslot is at Tech F281 from " +
       sheet.getCell(data.i, 0).value +
-      " on Wednesday, January 15th.",})
+      " on Wednesday, April 9th.",})
   }
   return true;
 });
 
 exports.getCCTimes = functions.https.onCall(async (data, context) => {
   times = [];
+  console.log("running\n");
   await cc_signup_doc.useServiceAccountAuth(creds);
   await cc_signup_doc.loadInfo();
   const sheet = cc_signup_doc.sheetsByIndex[0];
-  await sheet.loadCells("A6:K26");
+  await sheet.loadCells("A6:H25");
 
   for (var i = 5; i < 25; i += 1) {
     //i is the row
@@ -133,18 +135,20 @@ exports.getCCTimes = functions.https.onCall(async (data, context) => {
     const interviewer2 = sheet.getCell(i, 3).value;
     if (interviewer1 || interviewer2) {
       var has_spot = false;
-      for (var j = 5; j < 10; j++) {
+      for (var j = 5; j < 8; j++) {
         if (!sheet.getCell(i, j).value) {
+          console.log("hasspot\n");
           has_spot = true;
         }
       }
       if (!has_spot) {
+        console.log("nospot\n");
         continue;
       }
       times.push({
         time: sheet.getCell(i, 0).value,
         location: sheet.getCell(i, 4).value,
-        date: "January 14th",
+        date: "April 8th",
         i: i,
         j: 0,
       });
@@ -157,7 +161,7 @@ exports.reserveIndivTime = functions.https.onCall(async (data, context) => {
   await indiv_signup_doc.useServiceAccountAuth(creds);
   await indiv_signup_doc.loadInfo();
   const sheet = indiv_signup_doc.sheetsByIndex[0];
-  await sheet.loadCells("A3:U14");
+  await sheet.loadCells("A3:R13");
   const toReserve = sheet.getCell(data.i, data.j);
   if (toReserve.value) {
     console.log("Time already reserved!");
@@ -203,7 +207,7 @@ exports.getIndivTimes = functions.https.onCall(async (data, context) => {
   await indiv_signup_doc.useServiceAccountAuth(creds);
   await indiv_signup_doc.loadInfo();
   const sheet = indiv_signup_doc.sheetsByIndex[0];
-  await sheet.loadCells("A3:U14");
+  await sheet.loadCells("A3:Q13");
   if (data.cs) {
     console.log("Requesting CS times");
   } else {
@@ -211,7 +215,7 @@ exports.getIndivTimes = functions.https.onCall(async (data, context) => {
   }
   for (var i = 2; i < 13; i += 1) {
     //i is the row
-    for (var j = 4; j < 21; j += 4) {
+    for (var j = 4; j < 17; j += 4) {
       //j is the col
       if (
         sheet.getCell(i, j).value && (sheet.getCell(i, j - 1).value ||
@@ -258,7 +262,7 @@ exports.getGITimes = functions.https.onCall(async (data, context) => {
     //j is the col
     if (
       !isNaN(sheet.getCell(i, 1).value) &&
-      parseFloat(sheet.getCell(i, 1).value) < 30
+      parseFloat(sheet.getCell(i, 1).value) < 23
     ) {
       times.push({
         time: sheet.getCell(i, 0).value,
@@ -272,18 +276,20 @@ exports.getGITimes = functions.https.onCall(async (data, context) => {
   return times;
 });
 
+
 let rush_users = admin.database().ref("rush_users");
-exports.beforeAcc = functions.auth.user().beforeCreate(async (user) => {
-  if (user.email.includes("northwestern.edu")) {
-    console.log("User allowed\n");
-    await rush_users
-      .child(user.uid)
-      .set({ email: user.email, completed_application: false });
-    return true;
-  }
-  console.log("User not allowed\n");
-  throw new functions.auth.HttpsError("permission-denied");
-});
+  exports.beforeAcc = functions.auth.user().beforeCreate(async (user) => {
+    if (user.email.includes("northwestern.edu")) {
+      console.log("User allowed\n");
+      await rush_users
+        .child(user.uid)
+        .set({ email: user.email, completed_application: false });
+      return true;
+    }
+    console.log("User not allowed\n");
+    throw new functions.auth.HttpsError("permission-denied");
+  });
+
 
 exports.publishResults = functions.https.onCall(async (data, context) => {
   const prom = new Promise((resolve, reject) => {

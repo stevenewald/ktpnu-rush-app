@@ -63,7 +63,7 @@ export default function DelibPortal(props: { user: any }) {
             Swal.fire({
               icon: "error",
               title: "You do not have permission to view this page",
-              text: "Contact Steve if you believe this is in error",
+              text: "Contact Caroline (239-300-3076) if you believe this is in error",
             });
           }
         });

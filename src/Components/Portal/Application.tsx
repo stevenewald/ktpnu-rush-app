@@ -47,11 +47,11 @@ export default function Application(props: {
   }, props.user);
 
   useEffect(() => {
-    if (new Date() > new Date(2025, 0, 13, 19) && !props.readonly) {
+    if (new Date() > new Date(2025, 3, 7, 22) && !props.readonly) {
       Swal.fire({
         icon: "error",
         title: "Applications are closed!",
-        text: "Applications for Winter 2025 are closed.",
+        text: "Applications for Spring 2025 are closed.",
       }).then(() => {
         window.location.href = "https://ktpnu.com";
       });
@@ -248,9 +248,9 @@ export default function Application(props: {
                     </h1>
                     <br></br>
                     <h1 className="font-bold">
-                      To join KTP for Winter Rush 2025, complete the application
-                      below by 7:00 pm on Monday, January 13th. Contact
-                      help@ktpnu.com with any questions.
+                      To join KTP for Spring Rush 2025, complete the application
+                      below by 7:00 pm on Monday, April 7th. Contact
+                      help@ktpnu.com or carolineguerra2027@u.northwestern.edu with any questions.
                     </h1>
                   </div>
                 </div>
@@ -433,7 +433,7 @@ export default function Application(props: {
                                     Swal.fire({
                                       icon: "error",
                                       title:
-                                        "Cover picture uploads must be in jpeg or png format",
+                                        "Cover picture uploads must be in jpeg or png format and less than 10 mb in size.",
                                     });
                                   } else {
                                     var reader = new FileReader();

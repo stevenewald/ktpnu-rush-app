@@ -53,7 +53,7 @@ export default function Congrats() {
                   Swal.fire({
                     icon: "success",
                     title: "Welcome to KTP!",
-                    text: "To confirm your bid, create an account on the member portal. You will be emailed instructions within the next 24 hours.",
+                    text: "Your bid has been confirmed! Please create an account on the KTP member portal. You will be emailed instructions within the next 24 hours.",
                       showConfirmButton: false,
                   }).then(() => {
                     window.location.href = "https://ktpnu.com/signup";
@@ -61,7 +61,7 @@ export default function Congrats() {
                 } else {
                   Swal.fire({
                     title: "We understand",
-                    html: "We know that this is a big decision, and we are happy to give you time to think about it.<br><br>Please reach out to us if you have any questions or concerns. Let us know by 2pm on Saturday with your decision at rush@ktpnu.com.<br><br>We hope you'll join us for our next pledge class, and if not, thank you for joining us for winter 2025 rush! We hope you enjoyed it as much as we did.",
+                    html: "We know that this is a big decision, and we are happy to give you time to think about it.<br><br>Please reach out to us if you have any questions or concerns. Let us know by 2pm on Monday with your decision at ktpnorthwestern@gmail.com.<br><br>We hope you'll join us for our next pledge class, and if not, thank you for joining us for spring 2025 rush! We hope you enjoyed it as much as we did.",
                     confirmButtonText: "I'll let you know soon!",
                   }).then(() => {
                     window.location.href = "https://ktpnu.com";
